@@ -28,13 +28,13 @@ export default function Hero() {
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <Link
-            href="#"
+            href="/products"
             className="w-full sm:w-auto bg-green-600 text-white font-bold px-8 py-3.5 rounded-xl hover:bg-green-700 transition-colors shadow-lg text-base"
           >
             🛒 Shop Fresh Produce
           </Link>
           <Link
-            href="#"
+            href="/register"
             className="w-full sm:w-auto bg-white text-green-700 font-bold px-8 py-3.5 rounded-xl border-2 border-green-200 hover:border-green-400 hover:bg-green-50 transition-colors text-base"
           >
             🌱 Join as a Farmer

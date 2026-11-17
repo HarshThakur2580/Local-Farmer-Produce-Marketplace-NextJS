@@ -4,6 +4,7 @@ const quickLinks = [
   { label: 'Home', href: '/' },
   { label: 'Products', href: '/products' },
   { label: 'Farmers', href: '/farmers' },
+  { label: 'Shopping Cart', href: '/cart' },
   { label: 'About Us', href: '/about' },
 ];
 
