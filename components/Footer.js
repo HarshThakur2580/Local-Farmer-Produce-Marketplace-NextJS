@@ -1,5 +1,19 @@
 import Link from 'next/link';
 
+const quickLinks = [
+  { label: 'Home', href: '/' },
+  { label: 'Products', href: '/products' },
+  { label: 'Farmers', href: '/farmers' },
+  { label: 'About Us', href: '/about' },
+];
+
+const farmerLinks = [
+  { label: 'Register Your Farm', href: '/register' },
+  { label: 'List Products', href: '/register' },
+  { label: 'Manage Orders', href: '/login' },
+  { label: 'Farmer Dashboard', href: '/login' },
+];
+
 export default function Footer() {
   return (
     <footer className="bg-gray-900 text-gray-300 py-12 px-4 sm:px-6 lg:px-8 mt-auto">
@@ -7,12 +21,12 @@ export default function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-10">
           {/* Brand */}
           <div>
-            <div className="flex items-center gap-2 mb-4">
+            <Link href="/" className="flex items-center gap-2 mb-4">
               <span className="text-2xl">🌿</span>
               <span className="font-bold text-white text-base">
                 Local Farmer Marketplace
               </span>
-            </div>
+            </Link>
             <p className="text-sm text-gray-400 leading-relaxed">
               Bridging the gap between local farmers and consumers for a fresher, fairer food system.
             </p>
@@ -22,10 +36,10 @@ export default function Footer() {
           <div>
             <h4 className="font-semibold text-white mb-4">Quick Links</h4>
             <ul className="space-y-2 text-sm">
-              {['Home', 'Products', 'Farmers', 'About Us'].map((link) => (
-                <li key={link}>
-                  <Link href="#" className="hover:text-green-400 transition-colors">
-                    {link}
+              {quickLinks.map(({ label, href }) => (
+                <li key={label}>
+                  <Link href={href} className="hover:text-green-400 transition-colors">
+                    {label}
                   </Link>
                 </li>
               ))}
@@ -36,15 +50,13 @@ export default function Footer() {
           <div>
             <h4 className="font-semibold text-white mb-4">For Farmers</h4>
             <ul className="space-y-2 text-sm">
-              {['Register Your Farm', 'List Products', 'Manage Orders', 'Farmer Dashboard'].map(
-                (link) => (
-                  <li key={link}>
-                    <Link href="#" className="hover:text-green-400 transition-colors">
-                      {link}
-                    </Link>
-                  </li>
-                )
-              )}
+              {farmerLinks.map(({ label, href }) => (
+                <li key={label}>
+                  <Link href={href} className="hover:text-green-400 transition-colors">
+                    {label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -70,4 +82,3 @@ export default function Footer() {
     </footer>
   );
 }
-
