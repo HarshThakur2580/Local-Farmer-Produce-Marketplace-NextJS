@@ -74,7 +74,10 @@ export default function Footer() {
 
         <div className="border-t border-gray-700 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-gray-500">
           <p>© 2026 Local Farmer Produce Marketplace. All rights reserved.</p>
-          <div className="flex gap-4">
+          <div className="flex items-center gap-4">
+            <Link href="/admin" className="text-gray-400 hover:text-green-400 transition-colors font-medium flex items-center gap-1">
+              <span>🛡️</span> Super Admin
+            </Link>
             <Link href="#" className="hover:text-green-400 transition-colors">Privacy Policy</Link>
             <Link href="#" className="hover:text-green-400 transition-colors">Terms of Service</Link>
           </div>
