@@ -8,14 +8,6 @@ const teamMembers = [
   { name: 'Sana Khan', role: 'Head of Customer Experience', emoji: '👩‍💼', bio: 'Ensures every buyer gets the freshest produce with the smoothest delivery experience.' },
 ];
 
-const milestones = [
-  { year: '2022', event: 'Platform founded with 10 pilot farmers in Karnataka.' },
-  { year: '2023', event: 'Expanded to 5 states, 500 farmers and 10,000 customers.' },
-  { year: '2024', event: 'Launched mobile app and same-day delivery in Bengaluru.' },
-  { year: '2025', event: 'Reached ₹10 crore in total farmer payouts. Pan-India operations.' },
-  { year: '2026', event: 'Serving 50+ counties with 2,000+ listed products.' },
-];
-
 const values = [
   { icon: '🌱', title: 'Sustainability', desc: 'We promote eco-friendly farming practices and reduce food miles by prioritizing local sourcing.' },
   { icon: '🤝', title: 'Fair Trade', desc: 'Farmers receive up to 40% more than what they earn through traditional supply chains.' },
@@ -105,31 +97,6 @@ export default function AboutPage() {
                 <p className="text-sm text-gray-600 leading-relaxed">{v.desc}</p>
               </div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Timeline */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-green-50">
-        <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-extrabold text-gray-900 mb-3">Our Journey</h2>
-            <p className="text-gray-500">From a small pilot to a nationwide platform.</p>
-          </div>
-          <div className="relative">
-            <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-green-200" />
-            <div className="space-y-8">
-              {milestones.map((m, i) => (
-                <div key={i} className="relative flex gap-6 items-start">
-                  <div className="w-12 h-12 rounded-full bg-green-600 text-white flex items-center justify-center font-bold text-xs flex-shrink-0 z-10 shadow-md">
-                    {m.year}
-                  </div>
-                  <div className="bg-white rounded-xl p-4 shadow-sm border border-green-100 flex-1">
-                    <p className="text-gray-700 text-sm leading-relaxed">{m.event}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
       </section>
