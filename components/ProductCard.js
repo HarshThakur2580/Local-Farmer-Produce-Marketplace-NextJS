@@ -7,6 +7,7 @@ import { useCart } from '@/context/CartContext';
 export default function ProductCard({ product }) {
   const { addToCart, cartItems } = useCart();
   const [addedAnimation, setAddedAnimation] = useState(false);
+  const [imgError, setImgError] = useState(false);
 
   // Check if item is already in cart
   const cartItem = cartItems?.find((item) => item.id === product.id);
@@ -24,12 +25,33 @@ export default function ProductCard({ product }) {
   return (
     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden group flex flex-col justify-between">
       <div>
-        {/* Product Image Placeholder */}
-        <div className="bg-gradient-to-br from-green-50 to-emerald-100 h-44 flex items-center justify-center text-7xl group-hover:scale-105 transition-transform duration-300 relative select-none">
-          {product.emoji}
+        {/* Product Image */}
+        <div className="relative h-48 w-full overflow-hidden bg-gray-50">
+          {product.image && !imgError ? (
+            <img
+              src={product.image}
+              alt={product.name}
+              onError={() => setImgError(true)}
+              loading="lazy"
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+            />
+          ) : (
+            <div className="w-full h-full bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center text-5xl">
+              {product.emoji || '🌿'}
+            </div>
+          )}
+
+          {/* Stock badge */}
           {product.stock && (
-            <span className="absolute top-3 right-3 text-[11px] font-semibold bg-white/90 backdrop-blur-sm text-gray-600 px-2 py-0.5 rounded-full shadow-xs">
+            <span className="absolute top-3 right-3 text-[11px] font-semibold bg-white/95 backdrop-blur-sm text-gray-700 px-2.5 py-0.5 rounded-full shadow-sm border border-gray-100">
               {product.stock} in stock
+            </span>
+          )}
+
+          {/* Organic badge overlay on image */}
+          {product.isOrganic && (
+            <span className="absolute top-3 left-3 text-[11px] font-semibold bg-emerald-600/90 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full shadow-sm">
+              100% Organic
             </span>
           )}
         </div>
@@ -42,7 +64,7 @@ export default function ProductCard({ product }) {
             </span>
             {product.isOrganic && (
               <span className="text-xs font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">
-                🌱 Organic
+                🌱 Farm Direct
               </span>
             )}
           </div>

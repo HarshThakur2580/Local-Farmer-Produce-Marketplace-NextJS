@@ -289,8 +289,12 @@ export default function AdminDashboardPage() {
                 className="bg-white rounded-2xl p-4 border border-amber-100 shadow-xs flex items-center justify-between gap-3"
               >
                 <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-10 h-10 rounded-xl bg-green-50 text-2xl flex items-center justify-center flex-shrink-0">
-                    {p.emoji || '🥦'}
+                  <div className="w-10 h-10 rounded-xl bg-green-50 overflow-hidden border border-gray-100 flex items-center justify-center flex-shrink-0">
+                    {p.image ? (
+                      <img src={p.image} alt={p.name} className="w-full h-full object-cover" />
+                    ) : (
+                      <span className="text-2xl">{p.emoji || '🥦'}</span>
+                    )}
                   </div>
                   <div className="min-w-0">
                     <p className="text-xs font-bold text-gray-900 truncate">{p.name}</p>

@@ -152,7 +152,13 @@ export default function AdminProductsPage() {
                   <tr key={p.id} className="hover:bg-gray-50/60 transition">
                     <td className="py-3 px-4">
                       <div className="flex items-center gap-2.5">
-                        <span className="text-2xl select-none">{p.emoji || '🥦'}</span>
+                        <div className="w-10 h-10 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0 border border-gray-200 flex items-center justify-center">
+                          {p.image ? (
+                            <img src={p.image} alt={p.name} className="w-full h-full object-cover" />
+                          ) : (
+                            <span className="text-xl select-none">{p.emoji || '🥦'}</span>
+                          )}
+                        </div>
                         <div>
                           <p className="font-bold text-gray-900">{p.name}</p>
                           {p.isOrganic && (

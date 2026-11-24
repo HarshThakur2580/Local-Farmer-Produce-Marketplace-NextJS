@@ -186,8 +186,12 @@ export default function AdminApprovalsPage() {
                     <div>
                       <div className="flex items-start justify-between gap-3 mb-3">
                         <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 rounded-2xl bg-green-50 text-3xl flex items-center justify-center flex-shrink-0">
-                            {prod.emoji || '🥦'}
+                          <div className="w-12 h-12 rounded-2xl bg-green-50 overflow-hidden border border-gray-100 flex items-center justify-center flex-shrink-0">
+                            {prod.image ? (
+                              <img src={prod.image} alt={prod.name} className="w-full h-full object-cover" />
+                            ) : (
+                              <span className="text-3xl">{prod.emoji || '🥦'}</span>
+                            )}
                           </div>
                           <div>
                             <h3 className="font-bold text-gray-900 text-sm">{prod.name}</h3>

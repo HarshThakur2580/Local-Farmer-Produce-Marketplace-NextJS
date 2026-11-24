@@ -165,8 +165,18 @@ export default function CartPage() {
                       >
                         {/* Product Info */}
                         <div className="flex items-center gap-4 min-w-0 flex-1">
-                          <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center text-3xl flex-shrink-0 select-none">
-                            {item.emoji || '🥬'}
+                          <div className="w-16 h-16 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0 border border-gray-100 flex items-center justify-center">
+                            {item.image ? (
+                              <img
+                                src={item.image}
+                                alt={item.name}
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <div className="w-full h-full bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center text-3xl select-none">
+                                {item.emoji || '🥬'}
+                              </div>
+                            )}
                           </div>
                           <div className="min-w-0">
                             <h3 className="font-bold text-gray-900 text-sm sm:text-base truncate">

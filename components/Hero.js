@@ -2,56 +2,121 @@ import Link from 'next/link';
 
 export default function Hero() {
   return (
-    <section className="bg-gradient-to-br from-green-50 via-emerald-50 to-lime-50 py-20 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto text-center">
-        {/* Badge */}
-        <div className="inline-flex items-center gap-2 bg-green-100 text-green-700 text-sm font-semibold px-4 py-1.5 rounded-full mb-6">
-          <span>🌾</span>
-          <span>Fresh from the Farm, Direct to You</span>
+    <section className="relative overflow-hidden bg-gradient-to-b from-emerald-50/70 via-green-50/40 to-white py-12 lg:py-20 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+          
+          {/* Left Column: Hero Content */}
+          <div className="lg:col-span-7 text-left space-y-6">
+            {/* Trust Pill */}
+            <div className="inline-flex items-center gap-2 bg-emerald-100/80 text-emerald-800 text-xs sm:text-sm font-semibold px-4 py-1.5 rounded-full border border-emerald-200/60 shadow-xs">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span>Fresh from the Farm, Direct to You</span>
+            </div>
+
+            {/* Main Headline */}
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 tracking-tight leading-[1.15]">
+              Local Farmer{' '}
+              <span className="text-emerald-600 block sm:inline">Produce Marketplace</span>
+            </h1>
+
+            {/* Subtitle */}
+            <p className="text-base sm:text-lg text-gray-600 max-w-2xl leading-relaxed">
+              Connecting local farmers directly with conscious consumers. Get fresh, naturally grown vegetables, fruits, and grains harvested at peak flavor without middlemen.
+            </p>
+
+            {/* Trust Points */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1 text-sm text-gray-700">
+              <div className="flex items-center gap-2">
+                <span className="text-emerald-600 font-bold">✓</span>
+                <span className="font-medium">100% Farm Direct</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-emerald-600 font-bold">✓</span>
+                <span className="font-medium">Fair Farmer Prices</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-emerald-600 font-bold">✓</span>
+                <span className="font-medium">Harvested Daily</span>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 pt-2">
+              <Link
+                href="/products"
+                className="inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-7 py-3.5 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 text-base"
+              >
+                <span>🛒</span>
+                <span>Shop Fresh Produce</span>
+              </Link>
+              <Link
+                href="/register"
+                className="inline-flex items-center justify-center gap-2 bg-white hover:bg-emerald-50 text-emerald-800 font-bold px-7 py-3.5 rounded-xl border-2 border-emerald-200 hover:border-emerald-300 transition-all duration-200 text-base"
+              >
+                <span>🌱</span>
+                <span>Join as a Farmer</span>
+              </Link>
+            </div>
+          </div>
+
+          {/* Right Column: Hero Visual Banner Card */}
+          <div className="lg:col-span-5 relative">
+            <div className="relative mx-auto max-w-lg lg:max-w-none">
+              {/* Outer Decorative Glow */}
+              <div className="absolute -inset-2 bg-gradient-to-r from-emerald-400/20 to-lime-300/20 rounded-3xl blur-xl"></div>
+
+              {/* Main Banner Container */}
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-white/60 bg-white">
+                <img
+                  src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1200&q=85"
+                  alt="Fresh farm produce market harvest basket"
+                  className="w-full h-80 sm:h-96 object-cover transform hover:scale-105 transition-transform duration-700 ease-out"
+                />
+
+                {/* Subtle Gradient Shade for Legibility */}
+                <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 via-transparent to-black/20 pointer-events-none"></div>
+
+                {/* Floating Badge Top-Right */}
+                <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-md px-3.5 py-1.5 rounded-full shadow-lg border border-gray-100 flex items-center gap-1.5 text-xs font-semibold text-gray-800">
+                  <span className="text-yellow-500">★</span>
+                  <span>4.9 / 5</span>
+                  <span className="text-gray-400 font-normal">(2,400+ reviews)</span>
+                </div>
+
+                {/* Bottom Overlay Info Banner */}
+                <div className="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-md p-3.5 rounded-2xl shadow-xl border border-white/80">
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center text-xl flex-shrink-0">
+                        🧺
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-gray-900">Morning Farm Harvest</p>
+                        <p className="text-[11px] text-gray-500">Delivered within 24 hours of picking</p>
+                      </div>
+                    </div>
+                    <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-1 rounded-md border border-emerald-100 uppercase tracking-wide">
+                      Fresh
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Heading */}
-        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight mb-6">
-          Local Farmer{' '}
-          <span className="text-green-600">Produce Marketplace</span>
-        </h1>
-
-        {/* Description */}
-        <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto mb-10 leading-relaxed">
-          Connecting local farmers directly with customers to provide{' '}
-          <span className="font-semibold text-green-700">fresh</span>,{' '}
-          <span className="font-semibold text-green-700">affordable</span> and{' '}
-          <span className="font-semibold text-green-700">locally grown</span>{' '}
-          agricultural products.
-        </p>
-
-        {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Link
-            href="/products"
-            className="w-full sm:w-auto bg-green-600 text-white font-bold px-8 py-3.5 rounded-xl hover:bg-green-700 transition-colors shadow-lg text-base"
-          >
-            🛒 Shop Fresh Produce
-          </Link>
-          <Link
-            href="/register"
-            className="w-full sm:w-auto bg-white text-green-700 font-bold px-8 py-3.5 rounded-xl border-2 border-green-200 hover:border-green-400 hover:bg-green-50 transition-colors text-base"
-          >
-            🌱 Join as a Farmer
-          </Link>
-        </div>
-
-        {/* Stats */}
-        <div className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-8 max-w-3xl mx-auto">
+        {/* Stats Strip */}
+        <div className="mt-16 pt-10 border-t border-gray-200/70 grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
           {[
             { value: '500+', label: 'Local Farmers' },
             { value: '2,000+', label: 'Products Listed' },
             { value: '10,000+', label: 'Happy Customers' },
-            { value: '50+', label: 'Counties Served' },
+            { value: '50+', label: 'Regions Served' },
           ].map((stat) => (
-            <div key={stat.label} className="text-center">
-              <p className="text-3xl font-extrabold text-green-600">{stat.value}</p>
-              <p className="text-sm text-gray-500 mt-1">{stat.label}</p>
+            <div key={stat.label} className="p-3">
+              <p className="text-3xl sm:text-4xl font-extrabold text-emerald-600">{stat.value}</p>
+              <p className="text-xs sm:text-sm font-medium text-gray-500 mt-1">{stat.label}</p>
             </div>
           ))}
         </div>
@@ -59,4 +124,5 @@ export default function Hero() {
     </section>
   );
 }
+
 
