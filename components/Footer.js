@@ -71,7 +71,7 @@ export default function Footer() {
               <li>📞 +91 7857902009, Harsh</li>
               <li>📞 +91 7851030266, Shubham</li>
               <li>📞 +91 7541945308, Akash</li>
-              <li>📍 Jalandhar, Punjab</li>
+              <li>📍 Jalandhar & Phagwara (Law Gate, Green Valley), Punjab</li>
             </ul>
           </div>
         </div>

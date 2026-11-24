@@ -113,7 +113,9 @@ export function CartProvider({ children }) {
   // Computed values
   const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const deliveryFee = subtotal === 0 ? 0 : subtotal >= 20 ? 0 : 2.5;
+  const freeDeliveryThreshold = 199;
+  const standardDeliveryFee = 30;
+  const deliveryFee = subtotal === 0 ? 0 : subtotal >= freeDeliveryThreshold ? 0 : standardDeliveryFee;
   const total = subtotal + deliveryFee;
 
   return (
@@ -128,6 +130,7 @@ export function CartProvider({ children }) {
         clearCart,
         cartCount,
         subtotal,
+        freeDeliveryThreshold,
         deliveryFee,
         total,
         isLoaded,

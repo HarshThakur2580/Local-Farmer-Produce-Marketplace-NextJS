@@ -36,7 +36,7 @@ export default function CartPage() {
     );
   }
 
-  const freeDeliveryThreshold = 20;
+  const freeDeliveryThreshold = 199;
   const amountToFreeDelivery = freeDeliveryThreshold - subtotal;
 
   const handleCheckoutSubmit = (e) => {
@@ -269,7 +269,7 @@ export default function CartPage() {
                     <span>Delivery Fee</span>
                     <span
                       className="text-[10px] text-gray-400 cursor-pointer"
-                      title="Free delivery on orders ₹20 and above"
+                      title="Free delivery on orders ₹199 and above across Jalandhar, Phagwara, Law Gate & Green Valley"
                     >
                       ℹ️
                     </span>

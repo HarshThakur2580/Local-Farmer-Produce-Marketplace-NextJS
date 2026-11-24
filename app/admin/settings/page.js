@@ -9,9 +9,9 @@ export default function AdminSettingsPage() {
   const [formSettings, setFormSettings] = useState({
     platformName: settings.platformName || 'Fresh Farm Marketplace',
     platformCommissionRate: settings.platformCommissionRate || 10,
-    minFarmerPayoutThreshold: settings.minFarmerPayoutThreshold || 50,
-    freeDeliveryThreshold: settings.freeDeliveryThreshold || 20,
-    defaultDeliveryFee: settings.defaultDeliveryFee || 2.5,
+    minFarmerPayoutThreshold: settings.minFarmerPayoutThreshold || 500,
+    freeDeliveryThreshold: settings.freeDeliveryThreshold || 199,
+    defaultDeliveryFee: settings.defaultDeliveryFee || 30,
     autoApproveFarmers: settings.autoApproveFarmers || false,
     autoApproveProducts: settings.autoApproveProducts || false,
     maintenanceMode: settings.maintenanceMode || false,
