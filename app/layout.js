@@ -2,7 +2,7 @@ import './globals.css';
 import { CartProvider } from '@/context/CartContext';
 
 export const metadata = {
-  title: 'Local Farmer Produce Marketplace',
+  title: 'Farm Fresh',
   description:
     'Connecting local farmers directly with customers to provide fresh, affordable and locally grown agricultural products.',
 };

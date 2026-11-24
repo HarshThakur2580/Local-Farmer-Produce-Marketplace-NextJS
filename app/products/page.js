@@ -103,7 +103,7 @@ export default function ProductsPage() {
                   onChange={(e) => setOrganicOnly(e.target.checked)}
                   className="w-4 h-4 accent-green-600 rounded"
                 />
-                <span>🌱 Organic Only</span>
+                <span> Organic Only</span>
               </label>
 
               {/* Sort By Dropdown */}
