@@ -15,7 +15,7 @@ export default function AdminSettingsPage() {
     autoApproveFarmers: settings.autoApproveFarmers || false,
     autoApproveProducts: settings.autoApproveProducts || false,
     maintenanceMode: settings.maintenanceMode || false,
-    supportEmail: settings.supportEmail || 'admin@freshfarm.market',
+    supportEmail: settings.supportEmail || 'officialharsh2580@gmail.com',
     supportPhone: settings.supportPhone || '+91 (555) 123-4567',
   });
 

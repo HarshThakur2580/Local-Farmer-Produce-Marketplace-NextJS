@@ -67,7 +67,7 @@ export default function Footer() {
             <ul className="space-y-2 text-sm text-gray-400">
               <li>📩 officialharsh2581@gmail.com</li>
               <li>📩 shubhamyadav10082001@gmail.com</li>
-              <li>📩 officialharsh2581@gmail.com</li>
+              <li>📩 akashbhartee@gmail.com</li>
               <li>📞 +91 7857902009, Harsh</li>
               <li>📞 +91 7851030266, Shubham</li>
               <li>📞 +91 7541945308, Akash</li>

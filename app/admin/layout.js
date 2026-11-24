@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { AdminProvider, useAdmin } from '@/context/AdminContext';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminHeader from '@/components/admin/AdminHeader';
+import { SEEDED_SUPER_ADMIN, SEEDED_ADMIN_PASSWORD_PLAIN } from '@/lib/adminAuth';
 
 export default function AdminLayout({ children }) {
   return (
@@ -16,8 +17,8 @@ export default function AdminLayout({ children }) {
 function AdminLayoutInner({ children }) {
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const { isAuthenticated, loginAdmin, isLoaded } = useAdmin();
-  const [loginEmail, setLoginEmail] = useState('admin@freshfarm.market');
-  const [loginPassword, setLoginPassword] = useState('Admin@FreshFarm2026!');
+  const [loginEmail, setLoginEmail] = useState(SEEDED_SUPER_ADMIN.email);
+  const [loginPassword, setLoginPassword] = useState(SEEDED_ADMIN_PASSWORD_PLAIN);
   const [loginError, setLoginError] = useState('');
 
   if (!isLoaded) {
@@ -88,9 +89,9 @@ function AdminLayoutInner({ children }) {
             </div>
 
             <div className="p-3 bg-gray-800/60 rounded-xl text-[11px] text-gray-400 border border-gray-800">
-              <span className="font-semibold text-green-400">Default Seed Account:</span>
-              <p>Email: admin@freshfarm.market</p>
-              <p>Key: Admin@FreshFarm2026!</p>
+              <span className="font-semibold text-green-400">Super Admin Account:</span>
+              <p>Email: {SEEDED_SUPER_ADMIN.email}</p>
+              <p>Security Key: Configured in lib/adminAuth.js</p>
             </div>
 
             <button
