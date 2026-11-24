@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import AboutBanners from '@/components/AboutBanners';
 import PageWrapper from '@/components/PageWrapper';
 
 const teamMembers = [
@@ -62,22 +63,8 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Stats */}
-      <section className="bg-green-600 py-14 px-4 sm:px-6 lg:px-8 text-white">
-        <div className="max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-8 text-center">
-          {[
-            { value: '500+', label: 'Local Farmers' },
-            { value: '₹10Cr+', label: 'Farmer Payouts' },
-            { value: '10,000+', label: 'Happy Customers' },
-            { value: '50+', label: 'Counties Served' },
-          ].map((s) => (
-            <div key={s.label}>
-              <p className="text-4xl font-extrabold mb-1">{s.value}</p>
-              <p className="text-green-100 text-sm">{s.label}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+      {/* About Image Banners */}
+      <AboutBanners />
 
       {/* Values */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
