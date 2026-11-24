@@ -77,21 +77,6 @@ export default function Hero() {
             </div>
           </div>
         </div>
-
-        {/* Stats Strip */}
-        <div className="mt-16 pt-10 border-t border-gray-200/70 grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
-          {[
-            { value: '500+', label: 'Local Farmers' },
-            { value: '2,000+', label: 'Products Listed' },
-            { value: '10,000+', label: 'Happy Customers' },
-            { value: '50+', label: 'Regions Served' },
-          ].map((stat) => (
-            <div key={stat.label} className="p-3">
-              <p className="text-3xl sm:text-4xl font-extrabold text-emerald-600">{stat.value}</p>
-              <p className="text-xs sm:text-sm font-medium text-gray-500 mt-1">{stat.label}</p>
-            </div>
-          ))}
-        </div>
       </div>
     </section>
   );
