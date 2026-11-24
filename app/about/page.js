@@ -2,11 +2,10 @@ import Link from 'next/link';
 import PageWrapper from '@/components/PageWrapper';
 
 const teamMembers = [
-  { name: 'Arjun Sharma', role: 'Co-Founder & CEO', emoji: '👨‍💼', bio: 'Former agricultural economist passionate about bridging the urban-rural divide.' },
-  { name: 'Meena Patel', role: 'Co-Founder & CTO', emoji: '👩‍💻', bio: 'Full-stack engineer who grew up on a farm and saw firsthand the need for direct market access.' },
-  { name: 'Deepak Nair', role: 'Head of Farmer Relations', emoji: '👨‍🌾', bio: 'Has on-boarded 300+ farmers and trained them in digital tools and market pricing.' },
-  { name: 'Sana Khan', role: 'Head of Customer Experience', emoji: '👩‍💼', bio: 'Ensures every buyer gets the freshest produce with the smoothest delivery experience.' },
-];
+  { name: 'Harsh Ranjan', role: 'Co-Founder & CEO', emoji: '👨‍💼' } ,
+  { name: 'Shubham Yadav', role: 'Co-Founder & CTO', emoji: '👨‍💼' },
+  { name: 'Akash Kumar', role: 'Head of Farmer Relations', emoji: '👨‍🌾' }
+]
 
 const values = [
   { icon: '🌱', title: 'Sustainability', desc: 'We promote eco-friendly farming practices and reduce food miles by prioritizing local sourcing.' },

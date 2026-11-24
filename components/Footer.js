@@ -65,9 +65,13 @@ export default function Footer() {
           <div>
             <h4 className="font-semibold text-white mb-4">Contact Us</h4>
             <ul className="space-y-2 text-sm text-gray-400">
-              <li>📧 support@localfarm.market</li>
-              <li>📞 +1 (555) 123-4567</li>
-              <li>📍 Local Farming District</li>
+              <li>📩 officialharsh2581@gmail.com</li>
+              <li>📩 shubhamyadav10082001@gmail.com</li>
+              <li>📩 officialharsh2581@gmail.com</li>
+              <li>📞 +91 7857902009, Harsh</li>
+              <li>📞 +91 7851030266, Shubham</li>
+              <li>📞 +91 7541945308, Akash</li>
+              <li>📍 Jalandhar, Punjab</li>
             </ul>
           </div>
         </div>
