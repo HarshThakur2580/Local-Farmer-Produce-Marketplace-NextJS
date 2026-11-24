@@ -73,34 +73,6 @@ export default function Hero() {
                   alt="Fresh farm produce market harvest basket"
                   className="w-full h-80 sm:h-96 object-cover transform hover:scale-105 transition-transform duration-700 ease-out"
                 />
-
-                {/* Subtle Gradient Shade for Legibility */}
-                <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 via-transparent to-black/20 pointer-events-none"></div>
-
-                {/* Floating Badge Top-Right */}
-                <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-md px-3.5 py-1.5 rounded-full shadow-lg border border-gray-100 flex items-center gap-1.5 text-xs font-semibold text-gray-800">
-                  <span className="text-yellow-500">★</span>
-                  <span>4.9 / 5</span>
-                  <span className="text-gray-400 font-normal">(2,400+ reviews)</span>
-                </div>
-
-                {/* Bottom Overlay Info Banner */}
-                <div className="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-md p-3.5 rounded-2xl shadow-xl border border-white/80">
-                  <div className="flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center text-xl flex-shrink-0">
-                        🧺
-                      </div>
-                      <div>
-                        <p className="text-xs font-bold text-gray-900">Morning Farm Harvest</p>
-                        <p className="text-[11px] text-gray-500">Delivered within 24 hours of picking</p>
-                      </div>
-                    </div>
-                    <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-1 rounded-md border border-emerald-100 uppercase tracking-wide">
-                      Fresh
-                    </span>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
