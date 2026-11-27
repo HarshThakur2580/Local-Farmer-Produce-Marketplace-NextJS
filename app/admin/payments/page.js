@@ -5,6 +5,7 @@ import { useAdmin } from '@/context/AdminContext';
 import Badge from '@/components/admin/Badge';
 import ConfirmDialog from '@/components/admin/ConfirmDialog';
 import StatCard from '@/components/admin/StatCard';
+import Icon from '@/components/Icon';
 
 export default function AdminPaymentsPage() {
   const { payments, totalRevenue, platformEarnings, processRefund, releaseFarmerPayout, holdFarmerPayout } = useAdmin();
@@ -75,7 +76,7 @@ export default function AdminPaymentsPage() {
           onClick={() => alert('Financial reconciliation report (CSV) exported.')}
           className="self-start sm:self-auto bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 font-bold text-xs sm:text-sm px-4 py-2.5 rounded-xl transition shadow-xs flex items-center gap-1.5"
         >
-          <span>📥</span> Export Ledger (CSV)
+          Export ledger (CSV)
         </button>
       </div>
 
@@ -84,30 +85,26 @@ export default function AdminPaymentsPage() {
         <StatCard
           title="Gross Sales"
           value={`₹${totalRevenue.toFixed(2)}`}
-          icon="💰"
-          change="+28%"
-          changeType="positive"
+          icon="money"
           subtitle="processed volume"
         />
         <StatCard
           title="Platform Fees (10%)"
           value={`₹${platformEarnings.toFixed(2)}`}
-          icon="🏦"
-          change="+10%"
-          changeType="positive"
+          icon="chart"
           subtitle="marketplace revenue"
         />
         <StatCard
           title="Pending Payouts"
           value={`₹${pendingPayoutsTotal.toFixed(2)}`}
-          icon="⏳"
+          icon="clock"
           changeType="neutral"
           subtitle="scheduled disbursements"
         />
         <StatCard
           title="Refund Records"
           value={`₹${totalRefunded.toFixed(2)}`}
-          icon="↩️"
+          icon="refund"
           changeType="negative"
           subtitle="dispute resolutions"
         />
@@ -116,9 +113,7 @@ export default function AdminPaymentsPage() {
       {/* Filter and Tab Bar */}
       <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-xs flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
         <div className="relative flex-1">
-          <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm">
-            🔍
-          </span>
+          <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400"><Icon name="search" className="w-4 h-4" /></span>
           <input
             type="text"
             placeholder="Search by Transaction ID, Order ID, buyer or farmer..."

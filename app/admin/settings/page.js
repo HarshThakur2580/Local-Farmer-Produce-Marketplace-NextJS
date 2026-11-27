@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useAdmin } from '@/context/AdminContext';
+import Icon from '@/components/Icon';
 
 export default function AdminSettingsPage() {
   const { adminUser, settings, updateSettings, auditLogs } = useAdmin();
@@ -75,7 +76,7 @@ export default function AdminSettingsPage() {
             <div className="space-y-1 max-h-44 overflow-y-auto pr-1">
               {adminUser?.permissions?.map((p) => (
                 <div key={p} className="flex items-center gap-1.5 text-[11px] text-gray-600">
-                  <span className="text-green-600 font-bold">✓</span>
+                  <Icon name="check" className="w-4 h-4 text-green-600" />
                   <span>{p}</span>
                 </div>
               ))}
@@ -85,7 +86,7 @@ export default function AdminSettingsPage() {
           {/* Security Notice */}
           <div className="bg-amber-50 rounded-3xl p-6 border border-amber-200/70 text-amber-950 space-y-2 text-xs">
             <h4 className="font-bold flex items-center gap-1.5 text-sm text-amber-900">
-              <span>🛡️</span> Security Hardening Notice
+              <Icon name="shield" className="w-5 h-5" /> Security hardening notice
             </h4>
             <p className="leading-relaxed">
               Public user registration as an administrator is strictly disabled. Administrator credentials are only managed via server seed or internal security provisioning.
@@ -104,7 +105,7 @@ export default function AdminSettingsPage() {
 
           {savedSuccess && (
             <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs p-3.5 rounded-2xl mb-6 font-semibold flex items-center gap-2">
-              <span>✓</span> Platform configurations updated and recorded in the audit log!
+              <Icon name="check" className="w-4 h-4" /> Platform configurations updated and recorded in the audit log.
             </div>
           )}
 
@@ -256,7 +257,7 @@ export default function AdminSettingsPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-gray-100">
           <div>
             <h2 className="font-bold text-gray-900 text-base flex items-center gap-2">
-              <span>📜</span> Administrative Security Audit Logs
+              <Icon name="document" className="w-5 h-5" /> Administrative security audit logs
             </h2>
             <p className="text-xs text-gray-400 mt-0.5">
               Immutable server records tracking all privileged Super Admin actions

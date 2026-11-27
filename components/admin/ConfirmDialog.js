@@ -21,9 +21,9 @@ export default function ConfirmDialog({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-in fade-in">
-      <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-gray-100 relative">
-        <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-700 flex items-center justify-center text-2xl mb-4">
-          ⚠️
+      <div className="bg-[#fffef8] rounded-[2rem] max-w-md w-full p-6 sm:p-8 shadow-2xl border border-[#155d38]/12 relative">
+        <div className="w-12 h-12 rounded-full bg-[#f4511e]/10 text-[#b63814] flex items-center justify-center text-xl font-black mb-5">
+          !
         </div>
 
         <h3 className="text-lg font-bold text-gray-900 mb-2">{title}</h3>

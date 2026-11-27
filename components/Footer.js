@@ -1,90 +1,36 @@
 import Link from 'next/link';
 
-const quickLinks = [
-  { label: 'Home', href: '/' },
-  { label: 'Products', href: '/products' },
-  { label: 'Farmers', href: '/farmers' },
-  { label: 'Shopping Cart', href: '/cart' },
-  { label: 'About Us', href: '/about' },
-];
-
-const farmerLinks = [
-  { label: 'Register Your Farm', href: '/register' },
-  { label: 'List Products', href: '/register' },
-  { label: 'Manage Orders', href: '/login' },
-  { label: 'Farmer Dashboard', href: '/login' },
+const links = [
+  { label: 'Market', href: '/products' },
+  { label: 'Growers', href: '/farmers' },
+  { label: 'Our story', href: '/about' },
+  { label: 'Sign in', href: '/login' },
 ];
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-900 text-gray-300 py-12 px-4 sm:px-6 lg:px-8 mt-auto">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-10">
-          {/* Brand */}
+    <footer className="mt-auto bg-[#032515] px-4 py-16 text-white sm:py-20">
+      <div className="section-wrap">
+        <div className="grid lg:grid-cols-[1.2fr_0.8fr] gap-12 items-end border-b border-white/15 pb-14">
           <div>
-            <Link href="/" className="flex items-center gap-2 mb-4">
-              <span className="text-2xl">🌿</span>
-              <span className="font-bold text-white text-base">
-                Local Farmer Marketplace
-              </span>
-            </Link>
-            <p className="text-sm text-gray-400 leading-relaxed">
-              Bridging the gap between local farmers and consumers for a fresher, fairer food system.
-            </p>
+            <div className="flex items-center gap-3">
+              <span className="brand-mark"><svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M5 19C7 11 12 6 20 4c-1 8-6 13-14 15" /><path d="M7 16c3-1 6-3 9-7" /></svg></span>
+              <p className="text-xl font-black tracking-[-0.04em]">Farm Fresh <span className="text-[#79e87e] font-medium">Market</span></p>
+            </div>
+            <h2 className="section-title mt-8 max-w-3xl">Closer to the farm. Better at the table.</h2>
           </div>
-
-          {/* Quick Links */}
-          <div>
-            <h4 className="font-semibold text-white mb-4">Quick Links</h4>
-            <ul className="space-y-2 text-sm">
-              {quickLinks.map(({ label, href }) => (
-                <li key={label}>
-                  <Link href={href} className="hover:text-green-400 transition-colors">
-                    {label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* For Farmers */}
-          <div>
-            <h4 className="font-semibold text-white mb-4">For Farmers</h4>
-            <ul className="space-y-2 text-sm">
-              {farmerLinks.map(({ label, href }) => (
-                <li key={label}>
-                  <Link href={href} className="hover:text-green-400 transition-colors">
-                    {label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Contact */}
-          <div>
-            <h4 className="font-semibold text-white mb-4">Contact Us</h4>
-            <ul className="space-y-2 text-sm text-gray-400">
-              <li>📩 officialharsh2581@gmail.com</li>
-              <li>📩 shubhamyadav10082001@gmail.com</li>
-              <li>📩 akashbhartee@gmail.com</li>
-              <li>📞 +91 7857902009, Harsh</li>
-              <li>📞 +91 7851030266, Shubham</li>
-              <li>📞 +91 7541945308, Akash</li>
-              <li>📍 Jalandhar & Phagwara (Law Gate, Green Valley), Punjab</li>
-            </ul>
+          <div className="lg:justify-self-end">
+            <p className="max-w-md text-white/60 leading-relaxed">A community marketplace where local farmers control what they publish and customers shop from real, current listings.</p>
+            <Link href="/register" className="btn-primary mt-6">Create your account</Link>
           </div>
         </div>
 
-        <div className="border-t border-gray-700 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-gray-500">
-          <p>© 2026 Local Farmer Produce Marketplace. All rights reserved.</p>
-          <div className="flex items-center gap-4">
-            <Link href="/admin" className="text-gray-400 hover:text-green-400 transition-colors font-medium flex items-center gap-1">
-              <span>🛡️</span> Super Admin
-            </Link>
-            <Link href="#" className="hover:text-green-400 transition-colors">Privacy Policy</Link>
-            <Link href="#" className="hover:text-green-400 transition-colors">Terms of Service</Link>
-          </div>
+        <div className="pt-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <nav className="flex flex-wrap gap-x-6 gap-y-3" aria-label="Footer navigation">
+            {links.map((link) => <Link key={link.href} href={link.href} className="text-sm font-bold text-white/65 hover:text-[#79e87e]">{link.label}</Link>)}
+            <Link href="/admin" className="text-sm font-bold text-white/65 hover:text-[#79e87e]">Admin</Link>
+          </nav>
+          <p className="text-sm text-white/45">© 2026 Farm Fresh Market. Built for local food communities.</p>
         </div>
       </div>
     </footer>

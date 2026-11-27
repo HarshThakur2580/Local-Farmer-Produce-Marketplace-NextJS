@@ -3,13 +3,191 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --forest-950: #032515;
+  --forest-900: #07351f;
+  --forest-800: #0d472b;
+  --forest-700: #155d38;
+  --mint-100: #e5f7e8;
+  --mint-200: #c8efcf;
+  --lime: #79e87e;
+  --orange: #f4511e;
+  --cream: #f7f6ee;
+  --paper: #fffef8;
+  --ink: #10251a;
+  --muted: #607068;
+  --line: rgba(9, 65, 38, 0.14);
 }
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: #f9fafb;
+  min-width: 320px;
+  color: var(--ink);
+  background: var(--cream);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 16px;
+  text-rendering: optimizeLegibility;
 }
 
+::selection { color: var(--forest-950); background: var(--lime); }
+
+button, a, input, select, textarea {
+  transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 3px solid rgba(121, 232, 126, 0.45);
+  outline-offset: 2px;
+}
+
+@layer components {
+  .input {
+    @apply w-full px-4 py-3.5 text-sm font-medium focus:outline-none;
+    color: var(--ink);
+    background: rgba(255, 255, 255, 0.82);
+    border: 1px solid rgba(9, 65, 38, 0.18);
+    border-radius: 1rem;
+  }
+
+  .input:focus { border-color: var(--forest-700); box-shadow: 0 0 0 4px rgba(21, 93, 56, 0.1); }
+
+  .market-shell {
+    min-height: 100vh;
+    background: radial-gradient(circle at 8% 4%, rgba(121, 232, 126, 0.13), transparent 27rem), var(--cream);
+  }
+
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    padding: 0.75rem 1rem;
+    background: rgba(3, 37, 21, 0.96);
+    backdrop-filter: blur(18px);
+  }
+
+  .site-nav {
+    width: 100%;
+    max-width: 80rem;
+    min-height: 4.25rem;
+    margin: 0 auto;
+    padding: 0.6rem 0.75rem 0.6rem 1.25rem;
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.13);
+    border-radius: 999px;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.18);
+  }
+
+  .brand-mark {
+    display: grid;
+    place-items: center;
+    width: 2.2rem;
+    height: 2.2rem;
+    color: var(--forest-950);
+    background: var(--lime);
+    border-radius: 999px 999px 999px 0.35rem;
+    transform: rotate(-10deg);
+  }
+
+  .nav-pill { display: inline-flex; align-items: center; min-height: 2.7rem; padding: 0.55rem 1rem; border-radius: 999px; }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.75rem;
+    color: inherit;
+    border: 1px solid currentColor;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    line-height: 1;
+    text-transform: uppercase;
+    opacity: 0.82;
+  }
+
+  .display-title { font-size: clamp(3.4rem, 8vw, 7.4rem); font-weight: 900; letter-spacing: -0.075em; line-height: 0.86; }
+  .section-title { font-size: clamp(2.2rem, 4vw, 4.25rem); font-weight: 900; letter-spacing: -0.055em; line-height: 0.95; }
+  .section-wrap { width: min(100% - 2rem, 80rem); margin-inline: auto; }
+
+  .soft-panel {
+    background: rgba(255, 254, 248, 0.86);
+    border: 1px solid var(--line);
+    border-radius: 2rem;
+    box-shadow: 0 22px 70px rgba(9, 65, 38, 0.08);
+  }
+
+  .dark-panel { color: white; background: var(--forest-950); border: 1px solid rgba(255, 255, 255, 0.13); border-radius: 2rem; }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 3.1rem;
+    padding: 0.75rem 1.35rem;
+    color: var(--forest-950);
+    background: var(--lime);
+    border: 1px solid var(--lime);
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 800;
+  }
+
+  .btn-primary:hover { background: #98f29c; transform: translateY(-2px); box-shadow: 0 12px 30px rgba(121, 232, 126, 0.22); }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 3.1rem;
+    padding: 0.75rem 1.35rem;
+    color: inherit;
+    background: transparent;
+    border: 1px solid currentColor;
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 800;
+  }
+
+  .btn-secondary:hover { background: rgba(255, 255, 255, 0.09); transform: translateY(-2px); }
+
+  .auth-shell {
+    min-height: calc(100vh - 5.75rem);
+    padding: clamp(1rem, 3vw, 3rem);
+    color: white;
+    background: linear-gradient(120deg, rgba(3, 37, 21, 0.98), rgba(5, 48, 27, 0.9)), url("https://images.unsplash.com/photo-1609252509102-aa73ff792667?auto=format&fit=crop&w=1800&q=85") center / cover;
+  }
+
+  .auth-card { background: var(--paper); color: var(--ink); border: 1px solid rgba(255, 255, 255, 0.55); border-radius: 2rem; box-shadow: 0 35px 100px rgba(0, 0, 0, 0.28); }
+
+  .listing-hero {
+    color: white;
+    background: radial-gradient(circle at 86% 22%, rgba(244, 81, 30, 0.3), transparent 18rem), radial-gradient(circle at 10% 100%, rgba(121, 232, 126, 0.16), transparent 25rem), var(--forest-950);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .filter-panel { background: rgba(255, 254, 248, 0.92); border: 1px solid var(--line); border-radius: 1.5rem; box-shadow: 0 20px 55px rgba(9, 65, 38, 0.08); }
+
+  .admin-shell { min-height: 100vh; color: var(--ink); background: #eef5ec; }
+  .admin-shell .bg-white { background-color: var(--paper) !important; }
+  .admin-shell .rounded-2xl, .admin-shell .rounded-3xl { border-radius: 1.5rem; }
+  .admin-shell table { font-size: 0.875rem; }
+  .admin-shell input, .admin-shell select, .admin-shell textarea { min-height: 2.75rem; }
+}
+
+@media (max-width: 767px) {
+  .site-header { padding: 0.55rem; }
+  .site-nav { min-height: 3.75rem; padding-left: 0.9rem; }
+  .display-title { font-size: clamp(2.9rem, 14vw, 4.1rem); }
+}
+
+@media (max-width: 430px) {
+  .brand-suffix { display: none; }
+  .site-nav { padding-right: 0.55rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
+}

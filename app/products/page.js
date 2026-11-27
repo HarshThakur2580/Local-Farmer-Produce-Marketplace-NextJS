@@ -1,19 +1,47 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useEffect, useState, useMemo } from 'react';
+import Link from 'next/link';
 import PageWrapper from '@/components/PageWrapper';
 import ProductCard from '@/components/ProductCard';
-import { sampleProducts, categories } from '@/lib/sampleData';
+import Icon from '@/components/Icon';
+import { useAuth } from '@/context/AuthContext';
 
 export default function ProductsPage() {
+  const { user } = useAuth();
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('default');
   const [organicOnly, setOrganicOnly] = useState(false);
 
+  useEffect(() => {
+    let cancelled = false;
+    fetch('/api/products', { cache: 'no-store' })
+      .then(async (response) => {
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message || 'Unable to load products.');
+        if (!cancelled) setProducts(data.products || []);
+      })
+      .catch((error) => {
+        if (!cancelled) setLoadError(error.message);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => { cancelled = true; };
+  }, []);
+
+  const categories = useMemo(
+    () => ['All', ...Array.from(new Set(products.map((product) => product.category))).sort()],
+    [products]
+  );
+
   // Filter and sort products
   const filteredProducts = useMemo(() => {
-    return sampleProducts
+    return products
       .filter((p) => {
         // Category filter
         const matchesCategory = activeCategory === 'All' || p.category === activeCategory;
@@ -40,7 +68,7 @@ export default function ProductsPage() {
         if (sortBy === 'name-asc') return a.name.localeCompare(b.name);
         return 0; // default order
       });
-  }, [activeCategory, searchQuery, sortBy, organicOnly]);
+  }, [products, activeCategory, searchQuery, sortBy, organicOnly]);
 
   const handleResetFilters = () => {
     setActiveCategory('All');
@@ -52,29 +80,36 @@ export default function ProductsPage() {
   return (
     <PageWrapper>
       {/* Page Header */}
-      <section className="bg-gradient-to-br from-green-50 via-emerald-50 to-lime-50 py-12 px-4 sm:px-6 lg:px-8 border-b border-green-100">
-        <div className="max-w-7xl mx-auto">
-          <div className="inline-flex items-center gap-2 bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full mb-3">
-            🌾 Farm Fresh & Direct
+      <section className="listing-hero py-14 sm:py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-end justify-between gap-5">
+          <div>
+          <div className="eyebrow text-[#79e87e] mb-5">
+            Farm fresh & direct
           </div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-2">
-            Local Produce Market
+          <h1 className="section-title text-white mb-4">
+            Today&apos;s local harvest
           </h1>
-          <p className="text-gray-600 text-base sm:text-lg max-w-2xl">
-            Browse seasonal vegetables, fruits, grains and natural goods sourced directly from verified regional farmers.
+          <p className="text-white/65 text-base sm:text-lg max-w-2xl">
+            Browse products published by real marketplace members.
           </p>
+          </div>
+          {user?.accountType === 'farmer' ? (
+            <Link href="/products/new" className="btn-primary self-start">Add produce</Link>
+          ) : !user ? (
+            <Link href="/login" className="btn-primary self-start">Farmer sign in</Link>
+          ) : (
+            <span className="eyebrow self-start text-white">Customer account</span>
+          )}
         </div>
       </section>
 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Search & Sort Controls Bar */}
-        <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-xs mb-6">
+        <div className="filter-panel p-4 sm:p-5 mb-7">
           <div className="flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
             {/* Search Input */}
             <div className="relative flex-1">
-              <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm">
-                🔍
-              </span>
+              <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400"><Icon name="search" className="w-4 h-4" /></span>
               <input
                 type="text"
                 placeholder="Search products, vegetables, fruits or farmers..."
@@ -88,7 +123,7 @@ export default function ProductsPage() {
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-sm"
                   aria-label="Clear search"
                 >
-                  ✕
+                  <Icon name="close" className="w-4 h-4" />
                 </button>
               )}
             </div>
@@ -117,7 +152,7 @@ export default function ProductsPage() {
                   <option value="default">Featured / Default</option>
                   <option value="price-asc">Price: Low to High</option>
                   <option value="price-desc">Price: High to Low</option>
-                  <option value="rating">Top Rated ★</option>
+                  <option value="rating">Top rated</option>
                   <option value="name-asc">Alphabetical (A - Z)</option>
                 </select>
               </div>
@@ -149,7 +184,7 @@ export default function ProductsPage() {
         <div className="flex items-center justify-between mb-6 text-xs sm:text-sm text-gray-500">
           <p>
             Showing <span className="font-bold text-gray-800">{filteredProducts.length}</span> of{' '}
-            <span className="font-semibold text-gray-700">{sampleProducts.length}</span> items
+            <span className="font-semibold text-gray-700">{products.length}</span> items
             {activeCategory !== 'All' && (
               <span className="ml-1 text-green-700 font-medium">in {activeCategory}</span>
             )}
@@ -171,19 +206,26 @@ export default function ProductsPage() {
         </div>
 
         {/* Products Grid */}
-        {filteredProducts.length === 0 ? (
+        {loading ? (
+          <div className="text-center py-20 text-sm text-gray-500">Loading products...</div>
+        ) : loadError ? (
+          <div className="text-center py-20 bg-red-50 rounded-2xl border border-red-100 text-red-700">{loadError}</div>
+        ) : filteredProducts.length === 0 ? (
           <div className="text-center py-20 bg-white rounded-2xl border border-dashed border-gray-200 p-8">
-            <p className="text-6xl mb-4">🌾</p>
-            <h3 className="text-lg font-bold text-gray-800 mb-1">No products match your criteria</h3>
+            <div className="mx-auto mb-4 grid w-16 h-16 place-items-center rounded-full bg-[#e5f7e8] text-[#155d38]"><Icon name="leaf" className="w-8 h-8" /></div>
+            <h3 className="text-lg font-bold text-gray-800 mb-1">{products.length ? 'No products match your criteria' : 'No products have been added yet'}</h3>
             <p className="text-gray-500 text-sm max-w-sm mx-auto mb-6">
-              Try adjusting your search terms, changing the category, or clearing the active filters.
+              {products.length ? 'Try adjusting your search terms or clearing the active filters.' : 'Be the first marketplace member to publish fresh produce.'}
             </p>
-            <button
-              onClick={handleResetFilters}
-              className="bg-green-600 text-white text-xs font-semibold px-4 py-2.5 rounded-xl hover:bg-green-700 transition"
-            >
-              Clear All Filters
-            </button>
+            {products.length ? (
+              <button onClick={handleResetFilters} className="bg-green-600 text-white text-xs font-semibold px-4 py-2.5 rounded-xl hover:bg-green-700 transition">Clear All Filters</button>
+            ) : (
+              user?.accountType === 'farmer' ? (
+                <Link href="/products/new" className="inline-block bg-green-600 text-white text-xs font-semibold px-4 py-2.5 rounded-xl hover:bg-green-700 transition">Add First Product</Link>
+              ) : !user ? (
+                <Link href="/login" className="inline-block bg-green-600 text-white text-xs font-semibold px-4 py-2.5 rounded-xl hover:bg-green-700 transition">Farmer Sign In</Link>
+              ) : null
+            )}
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

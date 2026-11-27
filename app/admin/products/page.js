@@ -1,9 +1,11 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import Image from 'next/image';
 import { useAdmin } from '@/context/AdminContext';
 import Badge from '@/components/admin/Badge';
 import ConfirmDialog from '@/components/admin/ConfirmDialog';
+import Icon from '@/components/Icon';
 
 export default function AdminProductsPage() {
   const { products, categories, approveProduct, rejectProduct, updateProductDetails, deleteProduct } = useAdmin();
@@ -79,7 +81,7 @@ export default function AdminProductsPage() {
       <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-xs flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
         <div className="relative flex-1">
           <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm">
-            🔍
+            <Icon name="search" className="w-4 h-4" />
           </span>
           <input
             type="text"
@@ -152,18 +154,18 @@ export default function AdminProductsPage() {
                   <tr key={p.id} className="hover:bg-gray-50/60 transition">
                     <td className="py-3 px-4">
                       <div className="flex items-center gap-2.5">
-                        <div className="w-10 h-10 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0 border border-gray-200 flex items-center justify-center">
+                        <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0 border border-gray-200 flex items-center justify-center">
                           {p.image ? (
-                            <img src={p.image} alt={p.name} className="w-full h-full object-cover" />
+                            <Image src={p.image} alt={p.name} fill sizes="40px" className="w-full h-full object-cover" />
                           ) : (
-                            <span className="text-xl select-none">{p.emoji || '🥦'}</span>
+                            <Icon name="leaf" className="w-5 h-5 text-green-700" />
                           )}
                         </div>
                         <div>
                           <p className="font-bold text-gray-900">{p.name}</p>
                           {p.isOrganic && (
                             <span className="text-[10px] text-emerald-700 font-semibold bg-emerald-50 px-1.5 py-0.2 rounded">
-                              🌱 Organic
+                              <Icon name="organic" className="w-3 h-3" /> Organic
                             </span>
                           )}
                         </div>
@@ -192,7 +194,7 @@ export default function AdminProductsPage() {
                     </td>
 
                     <td className="py-3 px-4">
-                      <span className="text-yellow-500 font-bold">★ {p.rating || 'N/A'}</span>
+                      <span className="text-yellow-600 font-bold inline-flex items-center gap-1"><Icon name="star" className="w-3.5 h-3.5" />{p.rating || 'N/A'}</span>
                       {p.reviewsCount > 0 && (
                         <span className="text-[10px] text-gray-400 ml-1">({p.reviewsCount})</span>
                       )}
@@ -237,7 +239,7 @@ export default function AdminProductsPage() {
                               className="px-2 py-1 text-xs font-bold text-rose-600 hover:bg-rose-50 rounded-lg transition"
                               title="Delete listing"
                             >
-                              ✕
+                              <Icon name="close" className="w-4 h-4" />
                             </button>
                           </>
                         )}

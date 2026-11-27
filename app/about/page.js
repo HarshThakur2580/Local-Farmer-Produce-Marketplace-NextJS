@@ -1,134 +1,59 @@
 import Link from 'next/link';
-import AboutBanners from '@/components/AboutBanners';
 import PageWrapper from '@/components/PageWrapper';
-
-const teamMembers = [
-  { name: 'Harsh Ranjan', role: 'Co-Founder & CEO', emoji: '👨‍💼' } ,
-  { name: 'Shubham Yadav', role: 'Co-Founder & CTO', emoji: '👨‍💼' },
-  { name: 'Akash Kumar', role: 'Head of Farmer Relations', emoji: '👨‍🌾' }
-]
+import AboutBanners from '@/components/AboutBanners';
 
 const values = [
-  { icon: '🌱', title: 'Sustainability', desc: 'We promote eco-friendly farming practices and reduce food miles by prioritizing local sourcing.' },
-  { icon: '🤝', title: 'Fair Trade', desc: 'Farmers receive up to 40% more than what they earn through traditional supply chains.' },
-  { icon: '🔍', title: 'Transparency', desc: 'Know exactly where your food comes from. Every product is traceable to its farm.' },
-  { icon: '🌍', title: 'Community', desc: 'We reinvest in farming communities through training, tools and infrastructure.' },
-  { icon: '💚', title: 'Health First', desc: 'Fresh, minimally processed produce without harmful chemicals or artificial ripening.' },
-  { icon: '📱', title: 'Technology', desc: 'Empowering smallholder farmers with digital tools to compete in modern markets.' },
+  { label: 'Freshness', title: 'Let the season lead', text: 'Live listings help customers see what nearby growers actually have available now.' },
+  { label: 'Fairness', title: 'Put farmers in control', text: 'Growers create their own profiles, describe their harvests, and set their own marketplace prices.' },
+  { label: 'Trust', title: 'Make the source visible', text: 'Every listing connects back to a real farm profile instead of an anonymous catalogue.' },
+  { label: 'Community', title: 'Keep food relationships local', text: 'The platform is designed to shorten the distance between the field and the family table.' },
 ];
 
 export default function AboutPage() {
   return (
     <PageWrapper>
-      {/* Hero */}
-      <section className="bg-gradient-to-br from-green-50 via-emerald-50 to-lime-50 py-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 bg-green-100 text-green-700 text-sm font-semibold px-4 py-1.5 rounded-full mb-6">
-            🌿 Our Story
-          </div>
-          <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-6 leading-tight">
-            About{' '}
-            <span className="text-green-600">Local Farmer</span>
-            <br />
-            Produce Marketplace
-          </h1>
-          <p className="text-lg text-gray-600 leading-relaxed max-w-3xl mx-auto">
-            We are a technology-driven platform connecting local farmers directly with consumers, 
-            eliminating middlemen, ensuring fair prices and delivering fresh produce from farm to table.
-          </p>
-        </div>
-      </section>
-
-      {/* Mission & Vision */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10">
-          <div className="bg-green-50 rounded-2xl p-8 border border-green-100">
-            <div className="text-4xl mb-4">🎯</div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-3">Our Mission</h2>
-            <p className="text-gray-600 leading-relaxed">
-              To empower local farmers by giving them direct access to consumers, fair pricing, 
-              and digital tools — while providing customers with the freshest, most affordable, 
-              and transparently sourced agricultural produce possible.
-            </p>
-          </div>
-          <div className="bg-emerald-50 rounded-2xl p-8 border border-emerald-100">
-            <div className="text-4xl mb-4">🌟</div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-3">Our Vision</h2>
-            <p className="text-gray-600 leading-relaxed">
-              A world where every meal starts with a story — where you know the name of the farmer, 
-              the name of their farm, and the journey your food took to reach your plate. 
-              We&apos;re building a fairer, fresher, and more sustainable food ecosystem.
-            </p>
+      <section className="listing-hero px-4 py-16 sm:py-24">
+        <div className="section-wrap">
+          <span className="eyebrow text-[#79e87e]">Our story</span>
+          <h1 className="display-title mt-8 max-w-6xl"><span className="block text-[#f4511e]">A marketplace</span><span className="block text-[#79e87e]">with roots.</span></h1>
+          <div className="mt-12 grid lg:grid-cols-2 gap-8 lg:gap-16 items-end">
+            <p className="text-2xl sm:text-3xl font-black leading-tight">Farm Fresh exists to make local food easier to discover, easier to sell, and easier to trust.</p>
+            <p className="text-lg leading-relaxed text-white/65">Instead of filling the site with sample farms or fixed produce, the marketplace grows through the people who use it. Farmers publish the story; customers discover what is genuinely available.</p>
           </div>
         </div>
       </section>
 
-      {/* About Image Banners */}
-      <AboutBanners />
-
-      {/* Values */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-extrabold text-gray-900 mb-3">What We Stand For</h2>
-            <p className="text-gray-500 max-w-2xl mx-auto">
-              Our core values guide every decision we make — from product features to farmer partnerships.
-            </p>
+      <section className="bg-[#e5f7e8] px-4 py-20 sm:py-28">
+        <div className="section-wrap grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+          <AboutBanners />
+          <div>
+            <span className="eyebrow text-[#155d38]">Why we built it</span>
+            <h2 className="section-title mt-6">Local food deserves a better digital home.</h2>
+            <p className="mt-6 text-lg leading-relaxed text-[#40564a]">Traditional supply chains can hide the people, place, and care behind a harvest. This platform gives those details a place to live—and gives each participant a workspace suited to their role.</p>
+            <div className="mt-8 grid grid-cols-2 gap-3">
+              <div className="rounded-[1.5rem] bg-[#fffef8] p-5 border border-[#155d38]/10"><p className="font-black text-[#f4511e]">Customers</p><p className="text-sm text-[#607068] mt-2">Browse growers, shop listings, and keep a private cart.</p></div>
+              <div className="rounded-[1.5rem] bg-[#032515] text-white p-5"><p className="font-black text-[#79e87e]">Farmers</p><p className="text-sm text-white/60 mt-2">Build a farm profile and publish current produce.</p></div>
+            </div>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {values.map((v) => (
-              <div key={v.title} className="bg-gray-50 rounded-2xl p-6 border border-gray-100 hover:shadow-sm transition-shadow">
-                <div className="text-3xl mb-3">{v.icon}</div>
-                <h3 className="font-bold text-gray-900 mb-2">{v.title}</h3>
-                <p className="text-sm text-gray-600 leading-relaxed">{v.desc}</p>
-              </div>
+        </div>
+      </section>
+
+      <section className="bg-[#f7f6ee] px-4 py-20 sm:py-28">
+        <div className="section-wrap">
+          <div className="max-w-3xl"><span className="eyebrow text-[#155d38]">What guides us</span><h2 className="section-title mt-6">Four ideas, one healthier market.</h2></div>
+          <div className="grid md:grid-cols-2 gap-4 mt-12">
+            {values.map((value, index) => (
+              <article key={value.label} className={`rounded-[2rem] p-7 sm:p-9 min-h-64 flex flex-col justify-between ${index === 1 ? 'bg-[#f4511e] text-white' : index === 2 ? 'bg-[#032515] text-white' : 'bg-[#fffef8] border border-[#155d38]/15'}`}>
+                <span className={`text-xs font-black uppercase tracking-[0.16em] ${index === 1 ? 'text-white/65' : index === 2 ? 'text-[#79e87e]' : 'text-[#155d38]'}`}>{value.label}</span>
+                <div><h3 className="text-2xl sm:text-3xl font-black tracking-[-0.04em]">{value.title}</h3><p className={`mt-3 leading-relaxed ${index === 1 || index === 2 ? 'text-white/65' : 'text-[#607068]'}`}>{value.text}</p></div>
+              </article>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Team */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-extrabold text-gray-900 mb-3">Meet the Team</h2>
-            <p className="text-gray-500">The people behind the platform.</p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {teamMembers.map((m) => (
-              <div key={m.name} className="bg-gray-50 rounded-2xl p-6 text-center border border-gray-100 hover:shadow-sm transition-shadow">
-                <div className="text-5xl mb-3">{m.emoji}</div>
-                <h3 className="font-bold text-gray-900 text-base">{m.name}</h3>
-                <p className="text-xs text-green-700 font-semibold mb-2">{m.role}</p>
-                <p className="text-sm text-gray-500 leading-relaxed">{m.bio}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-green-600 to-emerald-700 text-white text-center">
-        <div className="max-w-2xl mx-auto">
-          <h2 className="text-3xl font-extrabold mb-4">Join Our Growing Community</h2>
-          <p className="text-green-100 mb-8 text-lg">
-            Whether you&apos;re a farmer looking to sell, or a customer looking for fresh produce — we&apos;ve got a place for you.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/register"
-              className="bg-white text-green-700 font-bold px-8 py-3 rounded-xl hover:bg-green-50 transition-colors shadow-lg"
-            >
-              Get Started Today
-            </Link>
-            <Link
-              href="/products"
-              className="border-2 border-white text-white font-bold px-8 py-3 rounded-xl hover:bg-white hover:text-green-700 transition-colors"
-            >
-              Browse Products
-            </Link>
-          </div>
-        </div>
+      <section className="bg-[#032515] text-white px-4 py-20 sm:py-24">
+        <div className="section-wrap text-center"><span className="eyebrow text-[#79e87e]">Take part</span><h2 className="section-title max-w-4xl mx-auto mt-6">Bring your next harvest—or your next meal—closer to home.</h2><div className="mt-8 flex flex-wrap justify-center gap-3"><Link href="/register" className="btn-primary">Join the marketplace</Link><Link href="/products" className="btn-secondary">Browse produce</Link></div></div>
       </section>
     </PageWrapper>
   );

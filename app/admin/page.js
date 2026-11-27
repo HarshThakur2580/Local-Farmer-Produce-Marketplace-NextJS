@@ -1,16 +1,18 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useAdmin } from '@/context/AdminContext';
 import StatCard from '@/components/admin/StatCard';
 import Badge from '@/components/admin/Badge';
+import Icon from '@/components/Icon';
 
 export default function AdminDashboardPage() {
   const {
     customers,
     farmers,
     products,
+    categories,
     orders,
     payments,
     pendingApprovalsCount,
@@ -19,33 +21,32 @@ export default function AdminDashboardPage() {
     approveProduct,
   } = useAdmin();
 
-  const [timeRange, setTimeRange] = useState('6M');
-
   // Pending items
   const pendingFarmers = farmers.filter((f) => f.status === 'Pending');
   const pendingProducts = products.filter((p) => p.status === 'Pending');
   const recentOrders = orders.slice(0, 5);
   const recentFarmers = farmers.slice(0, 4);
 
-  // Analytics Chart Data (Monthly revenue & orders in ₹)
+  // Live marketplace footprint. No fabricated historical values are shown.
   const chartData = [
-    { month: 'Jun', revenue: 14200, orders: 120, height: '40%' },
-    { month: 'Jul', revenue: 21500, orders: 185, height: '55%' },
-    { month: 'Aug', revenue: 28900, orders: 240, height: '70%' },
-    { month: 'Sep', revenue: 34100, orders: 290, height: '82%' },
-    { month: 'Oct', revenue: 41800, orders: 360, height: '95%' },
-    { month: 'Nov', revenue: totalRevenue > 0 ? totalRevenue * 100 : 49200, orders: 420, height: '100%' },
+    { label: 'Customers', value: customers.length },
+    { label: 'Farmers', value: farmers.length },
+    { label: 'Products', value: products.length },
+    { label: 'Orders', value: orders.length },
+    { label: 'Payments', value: payments.length },
   ];
+  const largestCount = Math.max(1, ...chartData.map((item) => item.value));
+  const largestCategoryCount = Math.max(1, ...categories.map((item) => item.productsCount || 0));
 
   return (
     <div className="space-y-8 animate-in fade-in">
       {/* Super Admin Welcome Banner */}
-      <div className="bg-gradient-to-r from-green-900 via-emerald-900 to-gray-900 text-white rounded-3xl p-6 sm:p-8 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden">
+      <div className="bg-[#032515] text-white rounded-[2rem] p-6 sm:p-8 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden border border-white/10">
         <div className="relative z-10 max-w-xl">
-          <span className="inline-block px-3 py-1 bg-green-500/20 text-green-300 border border-green-500/30 text-xs font-bold rounded-full mb-3">
-            🛡️ Super Admin Control Center
+          <span className="eyebrow text-[#79e87e] mb-4">
+            Super admin control center
           </span>
-          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-black tracking-[-0.05em]">
             Fresh Farm Marketplace Operations
           </h2>
           <p className="text-xs sm:text-sm text-gray-300 mt-2 leading-relaxed">
@@ -58,20 +59,17 @@ export default function AdminDashboardPage() {
             href="/admin/approvals"
             className="bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs sm:text-sm px-4 py-2.5 rounded-xl transition shadow-xs flex items-center gap-1.5"
           >
-            <span>⏳</span>
             <span>{pendingApprovalsCount} Pending Approvals</span>
           </Link>
           <Link
             href="/admin/reports"
             className="bg-white/10 hover:bg-white/20 text-white font-semibold text-xs sm:text-sm px-4 py-2.5 rounded-xl transition border border-white/20"
           >
-            📊 Financial Reports
+            Financial reports
           </Link>
         </div>
 
-        <div className="absolute -right-12 -bottom-12 text-9xl opacity-10 select-none pointer-events-none">
-          🌿
-        </div>
+        <div className="absolute -right-8 -bottom-8 opacity-10 pointer-events-none"><Icon name="leaf" className="w-40 h-40" strokeWidth={1} /></div>
       </div>
 
       {/* Metric Cards Grid */}
@@ -79,47 +77,37 @@ export default function AdminDashboardPage() {
         <StatCard
           title="Total Customers"
           value={customers.length}
-          icon="👥"
-          change="+18%"
-          changeType="positive"
-          subtitle="this month"
+          icon="users"
+          subtitle="live accounts"
         />
         <StatCard
           title="Total Farmers"
           value={farmers.length}
-          icon="👨‍🌾"
-          change="+8%"
-          changeType="positive"
-          subtitle="verified farms"
+          icon="farmer"
+          subtitle="farm profiles"
         />
         <StatCard
           title="Listed Products"
           value={products.length}
-          icon="🥦"
-          change="+24%"
-          changeType="positive"
-          subtitle="active catalog"
+          icon="leaf"
+          subtitle="catalog entries"
         />
         <StatCard
           title="Total Orders"
           value={orders.length}
-          icon="📦"
-          change="+32%"
-          changeType="positive"
-          subtitle="processed"
+          icon="package"
+          subtitle="persisted orders"
         />
         <StatCard
           title="Gross Revenue"
           value={`₹${totalRevenue.toFixed(0)}`}
-          icon="💰"
-          change="+27%"
-          changeType="positive"
-          subtitle="gross volume"
+          icon="money"
+          subtitle="persisted revenue"
         />
         <StatCard
           title="Approvals"
           value={pendingApprovalsCount}
-          icon="⏳"
+          icon="clock"
           badge={pendingApprovalsCount > 0 ? 'Urgent' : 'All Clear'}
           subtitle="pending review"
         />
@@ -127,65 +115,42 @@ export default function AdminDashboardPage() {
 
       {/* Analytics Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Sales & Growth Chart */}
+        {/* Live marketplace footprint */}
         <div className="lg:col-span-2 bg-white rounded-3xl p-6 border border-gray-100 shadow-xs">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
             <div>
               <h3 className="font-bold text-gray-900 text-base">
-                Marketplace Sales & Revenue Growth
+                Live marketplace footprint
               </h3>
               <p className="text-xs text-gray-400 mt-0.5">
-                Monthly gross agricultural transaction volume
+                Current MongoDB-backed records by entity
               </p>
             </div>
 
-            <div className="flex items-center gap-1 bg-gray-100 p-1 rounded-xl text-xs font-semibold">
-              {['1M', '3M', '6M', '1Y'].map((range) => (
-                <button
-                  key={range}
-                  onClick={() => setTimeRange(range)}
-                  className={`px-3 py-1 rounded-lg transition ${
-                    timeRange === range
-                      ? 'bg-white text-green-700 shadow-xs'
-                      : 'text-gray-500 hover:text-gray-900'
-                  }`}
-                >
-                  {range}
-                </button>
-              ))}
-            </div>
+            <span className="eyebrow text-[#155d38]">Live data</span>
           </div>
 
           {/* Bar Chart Visualizer */}
           <div className="h-64 flex items-end justify-between gap-3 pt-6 border-b border-gray-100 pb-2">
             {chartData.map((d) => (
-              <div key={d.month} className="flex-1 flex flex-col items-center gap-2 h-full justify-end group">
-                <div className="opacity-0 group-hover:opacity-100 transition-opacity text-[10px] font-bold text-gray-700 bg-gray-100 px-2 py-0.5 rounded-md whitespace-nowrap mb-1">
-                  ₹{d.revenue.toLocaleString()}
+              <div key={d.label} className="flex-1 flex flex-col items-center gap-2 h-full justify-end group">
+                <div className="opacity-0 group-hover:opacity-100 transition-opacity text-xs font-black text-[#10251a] bg-[#e5f7e8] px-2 py-1 rounded-full whitespace-nowrap mb-1">
+                  {d.value}
                 </div>
                 <div className="w-full max-w-[48px] bg-green-100 rounded-t-xl group-hover:bg-green-200 transition-colors relative overflow-hidden flex items-end">
                   <div
                     className="w-full bg-gradient-to-t from-green-600 to-emerald-400 rounded-t-xl transition-all duration-500"
-                    style={{ height: d.height }}
+                    style={{ height: `${d.value === 0 ? 2 : Math.max(12, (d.value / largestCount) * 100)}%` }}
                   />
                 </div>
-                <span className="text-xs font-semibold text-gray-500 mt-1">{d.month}</span>
+                <span className="text-xs font-semibold text-gray-500 mt-1">{d.label}</span>
               </div>
             ))}
           </div>
 
           <div className="flex items-center justify-between pt-4 text-xs text-gray-500">
-            <div className="flex items-center gap-4">
-              <span className="flex items-center gap-1.5">
-                <span className="w-3 h-3 rounded-full bg-green-600" />
-                <span>Gross Volume (INR)</span>
-              </span>
-              <span className="flex items-center gap-1.5">
-                <span className="w-3 h-3 rounded-full bg-green-200" />
-                <span>Capacity Threshold</span>
-              </span>
-            </div>
-            <span className="font-semibold text-emerald-700">Avg. Basket: ₹24.50</span>
+            <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-full bg-green-600" /><span>Current database count</span></span>
+            <span className="font-semibold text-emerald-700">Updated on dashboard load</span>
           </div>
         </div>
 
@@ -201,29 +166,26 @@ export default function AdminDashboardPage() {
             <p className="text-xs text-gray-400 mb-6">Distribution of produce listings</p>
 
             <div className="space-y-4">
-              {[
-                { name: 'Vegetables', share: '38%', count: '38 listings', color: 'bg-green-600' },
-                { name: 'Fruits', share: '26%', count: '26 listings', color: 'bg-emerald-500' },
-                { name: 'Grains & Pulses', share: '19%', count: '19 listings', color: 'bg-amber-500' },
-                { name: 'Leafy Greens', share: '14%', count: '14 listings', color: 'bg-lime-500' },
-                { name: 'Dairy & Honey', share: '12%', count: '12 listings', color: 'bg-yellow-500' },
-              ].map((c) => (
-                <div key={c.name} className="space-y-1.5">
+              {categories.slice(0, 5).map((category) => {
+                const width = `${Math.max(8, ((category.productsCount || 0) / largestCategoryCount) * 100)}%`;
+                return (
+                <div key={category.id} className="space-y-1.5">
                   <div className="flex justify-between text-xs font-semibold">
-                    <span className="text-gray-700">{c.name}</span>
-                    <span className="text-gray-500">{c.share}</span>
+                    <span className="text-gray-700">{category.name}</span>
+                    <span className="text-gray-500">{category.productsCount || 0}</span>
                   </div>
                   <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
-                    <div className={`h-full rounded-full ${c.color}`} style={{ width: c.share }} />
+                    <div className="h-full rounded-full bg-[#f4511e]" style={{ width }} />
                   </div>
                 </div>
-              ))}
+              );})}
+              {categories.length === 0 && <p className="py-8 text-center text-sm text-gray-400">No categories exist until farmers publish products.</p>}
             </div>
           </div>
 
           <div className="mt-6 pt-4 border-t border-gray-100 bg-gray-50/70 p-3 rounded-2xl text-xs text-gray-600 flex items-center justify-between">
-            <span>Commission Rate:</span>
-            <span className="font-extrabold text-green-700">10% Platform Fee</span>
+            <span>Live categories:</span>
+            <span className="font-extrabold text-green-700">{categories.length}</span>
           </div>
         </div>
       </div>
@@ -233,7 +195,7 @@ export default function AdminDashboardPage() {
         <div className="bg-amber-50/70 border border-amber-200 rounded-3xl p-6">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <span className="text-xl">⚠️</span>
+              <Icon name="warning" className="w-5 h-5" />
               <h3 className="font-bold text-amber-950 text-base">
                 Pending Verification & Approvals Action Queue
               </h3>
@@ -254,9 +216,7 @@ export default function AdminDashboardPage() {
                 className="bg-white rounded-2xl p-4 border border-amber-100 shadow-xs flex items-center justify-between gap-3"
               >
                 <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-10 h-10 rounded-xl bg-amber-50 text-xl flex items-center justify-center flex-shrink-0">
-                    {f.emoji || '👨‍🌾'}
-                  </div>
+                  <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center flex-shrink-0"><Icon name="farmer" className="w-5 h-5" /></div>
                   <div className="min-w-0">
                     <p className="text-xs font-bold text-gray-900 truncate">
                       {f.name} · {f.farmName}
@@ -289,11 +249,11 @@ export default function AdminDashboardPage() {
                 className="bg-white rounded-2xl p-4 border border-amber-100 shadow-xs flex items-center justify-between gap-3"
               >
                 <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-10 h-10 rounded-xl bg-green-50 overflow-hidden border border-gray-100 flex items-center justify-center flex-shrink-0">
+                  <div className="relative w-10 h-10 rounded-xl bg-green-50 overflow-hidden border border-gray-100 flex items-center justify-center flex-shrink-0">
                     {p.image ? (
-                      <img src={p.image} alt={p.name} className="w-full h-full object-cover" />
+                      <Image src={p.image} alt={p.name} fill sizes="40px" className="w-full h-full object-cover" />
                     ) : (
-                      <span className="text-2xl">{p.emoji || '🥦'}</span>
+                      <Icon name="leaf" className="w-6 h-6 text-green-700" />
                     )}
                   </div>
                   <div className="min-w-0">
@@ -389,9 +349,7 @@ export default function AdminDashboardPage() {
                 className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 hover:bg-gray-100/70 transition"
               >
                 <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-10 h-10 rounded-xl bg-white border border-gray-200 text-xl flex items-center justify-center flex-shrink-0">
-                    {f.emoji || '👨‍🌾'}
-                  </div>
+                  <div className="w-10 h-10 rounded-xl bg-white border border-gray-200 text-green-700 flex items-center justify-center flex-shrink-0"><Icon name="farmer" className="w-5 h-5" /></div>
                   <div className="min-w-0">
                     <p className="text-xs font-bold text-gray-900 truncate">{f.name}</p>
                     <p className="text-[11px] text-gray-500 truncate">{f.farmName}</p>
@@ -400,7 +358,7 @@ export default function AdminDashboardPage() {
 
                 <div className="text-right flex-shrink-0">
                   <Badge status={f.status} />
-                  <p className="text-[10px] text-gray-400 mt-1">★ {f.rating}</p>
+                  <p className="text-[10px] text-gray-400 mt-1 flex items-center justify-end gap-1"><Icon name="star" className="w-3 h-3" />{f.rating}</p>
                 </div>
               </div>
             ))}

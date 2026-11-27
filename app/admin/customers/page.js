@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import { useAdmin } from '@/context/AdminContext';
 import Badge from '@/components/admin/Badge';
 import ConfirmDialog from '@/components/admin/ConfirmDialog';
+import Icon from '@/components/Icon';
 
 export default function AdminCustomersPage() {
   const { customers, toggleSuspendCustomer, updateCustomerNotes } = useAdmin();
@@ -73,7 +74,7 @@ export default function AdminCustomersPage() {
       <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-xs flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
         <div className="relative flex-1">
           <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm">
-            🔍
+            <Icon name="search" className="w-4 h-4" />
           </span>
           <input
             type="text"

@@ -2,10 +2,14 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import PageWrapper from '@/components/PageWrapper';
+import Icon from '@/components/Icon';
 import { useCart } from '@/context/CartContext';
+import { useAuth } from '@/context/AuthContext';
 
 export default function CartPage() {
+  const { user, isLoading: authLoading } = useAuth();
   const {
     cartItems,
     increaseQuantity,
@@ -20,16 +24,49 @@ export default function CartPage() {
   } = useCart();
 
   const [checkoutModalOpen, setCheckoutModalOpen] = useState(false);
-  const [orderPlaced, setOrderPlaced] = useState(false);
+  const [placedOrder, setPlacedOrder] = useState(null);
 
   // If still hydrating from localStorage
-  if (!isLoaded) {
+  if (!isLoaded || authLoading) {
     return (
       <PageWrapper>
         <div className="min-h-[60vh] flex items-center justify-center">
           <div className="flex flex-col items-center gap-3">
-            <span className="text-4xl animate-bounce">🛒</span>
+            <Icon name="cart" className="w-10 h-10 text-[#79e87e] animate-pulse" />
             <p className="text-sm text-gray-500">Loading your cart...</p>
+          </div>
+        </div>
+      </PageWrapper>
+    );
+  }
+
+  if (!user) {
+    return (
+      <PageWrapper>
+        <div className="min-h-[65vh] flex items-center justify-center px-4">
+          <div className="soft-panel max-w-lg text-center p-8 sm:p-10">
+            <div className="mx-auto mb-4 grid w-16 h-16 place-items-center rounded-full bg-[#e5f7e8] text-[#155d38]"><Icon name="cart" className="w-8 h-8" /></div>
+            <h1 className="text-2xl font-extrabold text-gray-900">Sign in to view your cart</h1>
+            <p className="text-sm text-gray-500 mt-2 mb-6">Shopping carts are saved separately for each customer account.</p>
+            <Link href="/login" className="btn-primary">Sign in</Link>
+          </div>
+        </div>
+      </PageWrapper>
+    );
+  }
+
+  if (user?.accountType === 'farmer') {
+    return (
+      <PageWrapper>
+        <div className="min-h-[65vh] flex items-center justify-center px-4">
+          <div className="soft-panel max-w-lg text-center p-8 sm:p-10">
+            <div className="mx-auto mb-4 grid w-16 h-16 place-items-center rounded-full bg-[#e5f7e8] text-[#155d38]"><Icon name="farmer" className="w-8 h-8" /></div>
+            <h1 className="text-2xl font-extrabold text-gray-900">Farmer Selling Workspace</h1>
+            <p className="text-sm text-gray-500 mt-2 mb-6">Farmer accounts manage farm profiles and product listings. Shopping carts are available to customer accounts.</p>
+            <div className="grid sm:grid-cols-2 gap-3">
+              <Link href="/products/new" className="btn-primary">Add product</Link>
+              <Link href="/farmers/new" className="btn-secondary text-[#155d38]">Farm profile</Link>
+            </div>
           </div>
         </div>
       </PageWrapper>
@@ -41,7 +78,10 @@ export default function CartPage() {
 
   const handleCheckoutSubmit = (e) => {
     e.preventDefault();
-    setOrderPlaced(true);
+    setPlacedOrder({
+      id: Math.floor(100000 + Math.random() * 900000),
+      total,
+    });
     setTimeout(() => {
       clearCart();
     }, 500);
@@ -50,20 +90,20 @@ export default function CartPage() {
   return (
     <PageWrapper>
       {/* Header */}
-      <section className="bg-gradient-to-br from-green-50 to-emerald-50 py-10 px-4 sm:px-6 lg:px-8 border-b border-green-100">
+      <section className="listing-hero py-14 sm:py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2 text-xs text-green-700 font-semibold mb-2">
+            <div className="flex items-center gap-2 text-xs text-[#79e87e] font-semibold mb-4">
               <Link href="/" className="hover:underline">Home</Link>
               <span>/</span>
               <Link href="/products" className="hover:underline">Products</Link>
               <span>/</span>
-              <span className="text-gray-500 font-normal">Cart</span>
+              <span className="text-white/50 font-normal">Cart</span>
             </div>
-            <h1 className="text-3xl font-extrabold text-gray-900 flex items-center gap-3">
-              <span>🛒</span> Your Shopping Cart
+            <h1 className="section-title text-white">
+              Your shopping cart
             </h1>
-            <p className="text-gray-600 text-sm mt-1">
+            <p className="text-white/60 text-base mt-3">
               {cartCount > 0
                 ? `You have ${cartCount} ${cartCount === 1 ? 'item' : 'items'} in your cart.`
                 : 'Review your selected fresh produce.'}
@@ -73,7 +113,7 @@ export default function CartPage() {
           {cartItems.length > 0 && (
             <Link
               href="/products"
-              className="text-xs sm:text-sm font-semibold text-green-700 hover:text-green-800 bg-white border border-green-200 px-4 py-2.5 rounded-xl transition hover:bg-green-50 self-start sm:self-auto"
+              className="btn-secondary self-start sm:self-auto"
             >
               ← Continue Shopping
             </Link>
@@ -85,10 +125,8 @@ export default function CartPage() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         {cartItems.length === 0 ? (
           /* Empty Cart State */
-          <div className="max-w-lg mx-auto text-center py-16 px-4 bg-white rounded-3xl border border-gray-100 shadow-sm">
-            <div className="w-24 h-24 bg-green-50 rounded-full flex items-center justify-center text-5xl mx-auto mb-6">
-              🧺
-            </div>
+          <div className="soft-panel max-w-lg mx-auto text-center py-16 px-6">
+            <div className="w-24 h-24 bg-green-50 rounded-full flex items-center justify-center text-[#155d38] mx-auto mb-6"><Icon name="cart" className="w-10 h-10" /></div>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Your Cart is Empty</h2>
             <p className="text-gray-500 text-sm leading-relaxed mb-8 max-w-sm mx-auto">
               Looks like you haven&apos;t added any farm fresh produce yet. Connect directly with local farmers today!
@@ -96,13 +134,13 @@ export default function CartPage() {
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link
                 href="/products"
-                className="bg-green-600 text-white font-semibold text-sm px-6 py-3 rounded-xl hover:bg-green-700 transition shadow-sm"
+                className="btn-primary"
               >
                 Browse Fresh Products
               </Link>
               <Link
                 href="/farmers"
-                className="border border-gray-200 text-gray-700 font-medium text-sm px-6 py-3 rounded-xl hover:bg-gray-50 transition"
+                className="btn-secondary text-[#155d38]"
               >
                 Meet Our Farmers
               </Link>
@@ -116,14 +154,14 @@ export default function CartPage() {
               {/* Delivery Goal Banner */}
               <div className="bg-emerald-50 border border-emerald-100 rounded-2xl p-4 text-xs sm:text-sm text-emerald-800 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2">
-                  <span className="text-lg">🚚</span>
+                  <Icon name="truck" className="w-5 h-5 shrink-0" />
                   {amountToFreeDelivery > 0 ? (
                     <span>
                       Add <strong>₹{amountToFreeDelivery.toFixed(2)}</strong> more to unlock <strong>FREE Delivery</strong>!
                     </span>
                   ) : (
                     <span className="font-semibold text-emerald-900">
-                      🎉 Congratulations! You qualify for FREE Delivery!
+                      You qualify for free delivery.
                     </span>
                   )}
                 </div>
@@ -138,7 +176,7 @@ export default function CartPage() {
               </div>
 
               {/* Items Card */}
-              <div className="bg-white rounded-2xl border border-gray-100 shadow-xs overflow-hidden">
+              <div className="soft-panel overflow-hidden">
                 <div className="p-4 sm:p-6 border-b border-gray-100 flex items-center justify-between">
                   <h2 className="font-bold text-gray-900 text-base">
                     Order Items ({cartItems.length})
@@ -165,17 +203,17 @@ export default function CartPage() {
                       >
                         {/* Product Info */}
                         <div className="flex items-center gap-4 min-w-0 flex-1">
-                          <div className="w-16 h-16 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0 border border-gray-100 flex items-center justify-center">
+                          <div className="relative w-16 h-16 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0 border border-gray-100 flex items-center justify-center">
                             {item.image ? (
-                              <img
+                              <Image
                                 src={item.image}
                                 alt={item.name}
+                                fill
+                                sizes="64px"
                                 className="w-full h-full object-cover"
                               />
                             ) : (
-                              <div className="w-full h-full bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center text-3xl select-none">
-                                {item.emoji || '🥬'}
-                              </div>
+                              <div className="w-full h-full bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center text-[#155d38]"><Icon name="leaf" className="w-8 h-8" /></div>
                             )}
                           </div>
                           <div className="min-w-0">
@@ -183,7 +221,7 @@ export default function CartPage() {
                               {item.name}
                             </h3>
                             <p className="text-xs text-gray-500 flex items-center gap-2 mt-0.5">
-                              <span>🏡 {item.farmerName}</span>
+                              <span className="inline-flex items-center gap-1"><Icon name="farmer" className="w-3.5 h-3.5" />{item.farmerName}</span>
                               {item.isOrganic && (
                                 <span className="text-[10px] text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded font-medium">
                                   Organic
@@ -253,7 +291,7 @@ export default function CartPage() {
             </div>
 
             {/* Order Summary (1 Column) */}
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sticky top-24">
+            <div className="soft-panel p-6 sticky top-28">
               <h2 className="font-extrabold text-gray-900 text-lg mb-4 pb-3 border-b border-gray-100">
                 Order Summary
               </h2>
@@ -300,23 +338,23 @@ export default function CartPage() {
               {/* Checkout Button */}
               <button
                 onClick={() => setCheckoutModalOpen(true)}
-                className="w-full bg-green-600 text-white font-bold py-3.5 rounded-xl hover:bg-green-700 transition shadow-md text-sm flex items-center justify-center gap-2"
+                className="btn-primary w-full"
               >
-                <span>🔒</span> Proceed to Checkout
+                <Icon name="lock" className="w-4 h-4" /> Proceed to checkout
               </button>
 
               {/* Guarantees */}
               <div className="mt-6 pt-6 border-t border-gray-100 space-y-2.5 text-xs text-gray-500">
                 <div className="flex items-center gap-2">
-                  <span className="text-green-600">✓</span>
+                  <Icon name="check" className="w-4 h-4 text-green-600" />
                   <span>100% Direct from verified local farmers</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-green-600">✓</span>
+                  <Icon name="check" className="w-4 h-4 text-green-600" />
                   <span>Same-day or next-day fresh morning dispatch</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-green-600">✓</span>
+                  <Icon name="check" className="w-4 h-4 text-green-600" />
                   <span>Safe & secure mock checkout flow</span>
                 </div>
               </div>
@@ -328,28 +366,28 @@ export default function CartPage() {
       {/* Mock Checkout Modal */}
       {checkoutModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-in fade-in">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-gray-100 relative">
+          <div className="auth-card max-w-md w-full p-6 sm:p-8 relative">
             <button
               onClick={() => {
                 setCheckoutModalOpen(false);
-                setOrderPlaced(false);
+                setPlacedOrder(null);
               }}
               className="absolute top-5 right-5 text-gray-400 hover:text-gray-600 text-lg"
               aria-label="Close"
             >
-              ✕
+              <Icon name="close" className="w-5 h-5" />
             </button>
 
-            {orderPlaced ? (
+            {placedOrder ? (
               <div className="text-center py-4">
-                <div className="text-6xl mb-4">🎉</div>
+                <div className="mx-auto mb-4 grid w-16 h-16 place-items-center rounded-full bg-[#e5f7e8] text-[#155d38]"><Icon name="sparkles" className="w-8 h-8" /></div>
                 <h3 className="text-2xl font-extrabold text-gray-900 mb-2">Order Confirmed!</h3>
                 <p className="text-gray-600 text-sm mb-4">
                   Thank you for supporting local farmers! Your fresh produce order has been placed successfully in simulation mode.
                 </p>
                 <div className="bg-green-50 p-4 rounded-xl text-xs text-green-800 mb-6 text-left space-y-1">
-                  <p><strong>Order ID:</strong> #{Math.floor(100000 + Math.random() * 900000)}</p>
-                  <p><strong>Total Amount:</strong> ₹{total.toFixed(2)}</p>
+                  <p><strong>Order ID:</strong> #{placedOrder.id}</p>
+                  <p><strong>Total Amount:</strong> ₹{placedOrder.total.toFixed(2)}</p>
                   <p><strong>Payment Status:</strong> Paid (Cash on Delivery / Simulation)</p>
                   <p className="text-gray-500 pt-1 text-[11px]">
                     * Note: Frontend preview. Database and payment gateways will be wired in upcoming stages.
@@ -358,7 +396,7 @@ export default function CartPage() {
                 <button
                   onClick={() => {
                     setCheckoutModalOpen(false);
-                    setOrderPlaced(false);
+                    setPlacedOrder(null);
                   }}
                   className="w-full bg-green-600 text-white font-bold py-3 rounded-xl hover:bg-green-700 transition"
                 >
@@ -368,7 +406,7 @@ export default function CartPage() {
             ) : (
               <div>
                 <div className="flex items-center gap-2 mb-4">
-                  <span className="text-2xl">📦</span>
+                  <Icon name="package" className="w-6 h-6 text-[#155d38]" />
                   <h3 className="text-xl font-bold text-gray-900">Checkout Preview</h3>
                 </div>
                 <p className="text-xs text-gray-500 mb-6">

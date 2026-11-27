@@ -2,9 +2,11 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useAdmin } from '@/context/AdminContext';
 import Badge from '@/components/admin/Badge';
 import ConfirmDialog from '@/components/admin/ConfirmDialog';
+import Icon from '@/components/Icon';
 
 export default function AdminApprovalsPage() {
   const { farmers, products, approveFarmer, rejectFarmer, approveProduct, rejectProduct } = useAdmin();
@@ -41,7 +43,7 @@ export default function AdminApprovalsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-2xl">⏳</span>
+            <Icon name="clock" className="w-6 h-6" />
             <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight">
               Approvals & Quality Verification Hub
             </h1>
@@ -56,7 +58,7 @@ export default function AdminApprovalsPage() {
             onClick={handleApproveAll}
             className="self-start sm:self-auto bg-green-600 hover:bg-green-700 text-white font-bold text-xs sm:text-sm px-4 py-2.5 rounded-xl transition shadow-xs flex items-center gap-2"
           >
-            <span>✓</span> Approve All ({totalPending})
+            <Icon name="check" className="w-4 h-4" /> Approve all ({totalPending})
           </button>
         )}
       </div>
@@ -91,9 +93,7 @@ export default function AdminApprovalsPage() {
 
       {totalPending === 0 ? (
         <div className="text-center py-20 bg-white rounded-3xl border border-gray-100 p-8 shadow-xs">
-          <div className="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center text-4xl mx-auto mb-4">
-            🎉
-          </div>
+          <div className="w-20 h-20 bg-green-50 text-green-700 rounded-full flex items-center justify-center mx-auto mb-4"><Icon name="sparkles" className="w-9 h-9" /></div>
           <h2 className="text-lg font-bold text-gray-900 mb-1">Queue is Clear!</h2>
           <p className="text-xs sm:text-sm text-gray-500 max-w-sm mx-auto mb-6">
             All submitted farmer applications and produce listings have been verified and processed.
@@ -119,7 +119,7 @@ export default function AdminApprovalsPage() {
           {(activeTab === 'all' || activeTab === 'farmers') && pendingFarmers.length > 0 && (
             <div className="space-y-3">
               <h2 className="text-sm font-bold text-gray-800 flex items-center gap-2">
-                <span>👨‍🌾</span> Farmer Applications Awaiting Verification ({pendingFarmers.length})
+                <Icon name="farmer" className="w-5 h-5" /> Farmer applications awaiting verification ({pendingFarmers.length})
               </h2>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -131,13 +131,11 @@ export default function AdminApprovalsPage() {
                     <div>
                       <div className="flex items-start justify-between gap-3 mb-3">
                         <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 rounded-2xl bg-amber-50 text-3xl flex items-center justify-center flex-shrink-0">
-                            {farmer.emoji || '👨‍🌾'}
-                          </div>
+                          <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-700 flex items-center justify-center flex-shrink-0"><Icon name="farmer" className="w-6 h-6" /></div>
                           <div>
                             <h3 className="font-bold text-gray-900 text-sm">{farmer.name}</h3>
                             <p className="text-xs font-semibold text-green-700">{farmer.farmName}</p>
-                            <p className="text-[11px] text-gray-400">📍 {farmer.location}</p>
+                            <p className="text-[11px] text-gray-400 flex items-center gap-1"><Icon name="location" className="w-3 h-3" />{farmer.location}</p>
                           </div>
                         </div>
                         <Badge status="Pending" />
@@ -161,7 +159,7 @@ export default function AdminApprovalsPage() {
                         onClick={() => approveFarmer(farmer.id)}
                         className="px-4 py-1.5 bg-green-600 hover:bg-green-700 text-white text-xs font-bold rounded-xl transition shadow-xs"
                       >
-                        ✓ Verify & Approve
+                        Verify and approve
                       </button>
                     </div>
                   </div>
@@ -174,7 +172,7 @@ export default function AdminApprovalsPage() {
           {(activeTab === 'all' || activeTab === 'products') && pendingProducts.length > 0 && (
             <div className="space-y-3">
               <h2 className="text-sm font-bold text-gray-800 flex items-center gap-2">
-                <span>🥦</span> Produce Listings Awaiting Approval ({pendingProducts.length})
+                <Icon name="leaf" className="w-5 h-5" /> Produce listings awaiting approval ({pendingProducts.length})
               </h2>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -186,11 +184,11 @@ export default function AdminApprovalsPage() {
                     <div>
                       <div className="flex items-start justify-between gap-3 mb-3">
                         <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 rounded-2xl bg-green-50 overflow-hidden border border-gray-100 flex items-center justify-center flex-shrink-0">
+                          <div className="relative w-12 h-12 rounded-2xl bg-green-50 overflow-hidden border border-gray-100 flex items-center justify-center flex-shrink-0">
                             {prod.image ? (
-                              <img src={prod.image} alt={prod.name} className="w-full h-full object-cover" />
+                              <Image src={prod.image} alt={prod.name} fill sizes="48px" className="w-full h-full object-cover" />
                             ) : (
-                              <span className="text-3xl">{prod.emoji || '🥦'}</span>
+                              <Icon name="leaf" className="w-7 h-7 text-green-700" />
                             )}
                           </div>
                           <div>
@@ -225,7 +223,7 @@ export default function AdminApprovalsPage() {
                         onClick={() => approveProduct(prod.id)}
                         className="px-4 py-1.5 bg-green-600 hover:bg-green-700 text-white text-xs font-bold rounded-xl transition shadow-xs"
                       >
-                        ✓ Approve Listing
+                        Approve listing
                       </button>
                     </div>
                   </div>

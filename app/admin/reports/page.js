@@ -54,7 +54,7 @@ export default function AdminReportsPage() {
             onClick={() => alert('Audited Report package compiled & downloaded (PDF/CSV).')}
             className="bg-green-600 hover:bg-green-700 text-white font-bold text-xs px-3.5 py-2 rounded-xl transition shadow-xs flex items-center gap-1.5"
           >
-            <span>📥</span> Download Report
+            Download report
           </button>
         </div>
       </div>
@@ -64,7 +64,7 @@ export default function AdminReportsPage() {
         <StatCard
           title="Total Gross Volume"
           value={`₹${totalRevenue.toFixed(2)}`}
-          icon="📈"
+          icon="chart"
           change="+34.8%"
           changeType="positive"
           subtitle="vs previous period"
@@ -72,7 +72,7 @@ export default function AdminReportsPage() {
         <StatCard
           title="Platform Take (10%)"
           value={`₹${platformEarnings.toFixed(2)}`}
-          icon="🏛️"
+          icon="money"
           change="+34.8%"
           changeType="positive"
           subtitle="net retained margin"
@@ -80,7 +80,7 @@ export default function AdminReportsPage() {
         <StatCard
           title="Producer Payouts"
           value={`₹${(totalRevenue - platformEarnings).toFixed(2)}`}
-          icon="🌾"
+          icon="farmer"
           change="+34.8%"
           changeType="positive"
           subtitle="direct to farmers"
@@ -88,7 +88,7 @@ export default function AdminReportsPage() {
         <StatCard
           title="Active Consumers"
           value={customers.length * 125}
-          icon="👥"
+          icon="users"
           change="+21.5%"
           changeType="positive"
           subtitle="projected buyer cohort"
@@ -159,14 +159,14 @@ export default function AdminReportsPage() {
                   <div className="min-w-0">
                     <p className="text-xs font-bold text-gray-900 truncate">{f.name}</p>
                     <p className="text-[11px] text-gray-400">
-                      📍 {f.location} · {f.fulfillment} fulfillment rate
+                      {f.location} · {f.fulfillment} fulfillment rate
                     </p>
                   </div>
                 </div>
 
                 <div className="text-right flex-shrink-0">
                   <p className="text-xs font-extrabold text-green-700">{f.volume}</p>
-                  <p className="text-[10px] text-yellow-600 font-bold">★ {f.rating}</p>
+                  <p className="text-[10px] text-yellow-600 font-bold">Rating {f.rating}</p>
                 </div>
               </div>
             ))}

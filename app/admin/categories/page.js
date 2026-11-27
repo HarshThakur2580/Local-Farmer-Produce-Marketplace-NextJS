@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useAdmin } from '@/context/AdminContext';
 import Badge from '@/components/admin/Badge';
 import ConfirmDialog from '@/components/admin/ConfirmDialog';
+import Icon from '@/components/Icon';
 
 export default function AdminCategoriesPage() {
   const { categories, addCategory, updateCategory, deleteCategory } = useAdmin();
@@ -15,12 +16,11 @@ export default function AdminCategoriesPage() {
     name: '',
     slug: '',
     description: '',
-    icon: '🥕',
   });
 
   const handleOpenCreate = () => {
     setEditingCategory(null);
-    setFormData({ name: '', slug: '', description: '', icon: '🥕' });
+    setFormData({ name: '', slug: '', description: '' });
     setModalOpen(true);
   };
 
@@ -30,7 +30,6 @@ export default function AdminCategoriesPage() {
       name: cat.name,
       slug: cat.slug,
       description: cat.description,
-      icon: cat.icon || '🥕',
     });
     setModalOpen(true);
   };
@@ -44,7 +43,6 @@ export default function AdminCategoriesPage() {
         name: formData.name,
         slug: formData.slug || formData.name.toLowerCase().replace(/[^a-z0-9]/g, '-'),
         description: formData.description,
-        icon: formData.icon,
       });
     } else {
       addCategory(formData);
@@ -76,7 +74,7 @@ export default function AdminCategoriesPage() {
           onClick={handleOpenCreate}
           className="self-start sm:self-auto bg-green-600 hover:bg-green-700 text-white font-bold text-xs sm:text-sm px-4 py-2.5 rounded-xl transition shadow-xs flex items-center gap-1.5"
         >
-          <span>＋</span> Add New Category
+          Add new category
         </button>
       </div>
 
@@ -89,9 +87,7 @@ export default function AdminCategoriesPage() {
           >
             <div>
               <div className="flex items-start justify-between gap-3 mb-4">
-                <div className="w-12 h-12 rounded-2xl bg-green-50 border border-green-100 text-3xl flex items-center justify-center flex-shrink-0 select-none">
-                  {cat.icon || '🥕'}
-                </div>
+                <div className="w-12 h-12 rounded-2xl bg-green-50 border border-green-100 text-green-700 flex items-center justify-center flex-shrink-0"><Icon name="leaf" className="w-6 h-6" /></div>
                 <Badge status={cat.status || 'Active'} />
               </div>
 
@@ -102,7 +98,7 @@ export default function AdminCategoriesPage() {
 
             <div className="pt-4 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
               <span className="font-semibold text-gray-700">
-                📦 {cat.productsCount || 0} active products
+                <span className="inline-flex items-center gap-1"><Icon name="package" className="w-4 h-4" />{cat.productsCount || 0} active products</span>
               </span>
 
               <div className="flex items-center gap-2">
@@ -117,7 +113,7 @@ export default function AdminCategoriesPage() {
                   className="px-2 py-1 text-rose-600 hover:bg-rose-50 font-bold rounded-lg transition"
                   title="Delete category"
                 >
-                  ✕
+                  <Icon name="close" className="w-4 h-4" />
                 </button>
               </div>
             </div>
@@ -137,18 +133,7 @@ export default function AdminCategoriesPage() {
             </p>
 
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-4 gap-3">
-                <div className="col-span-1">
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">Icon</label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.icon}
-                    onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
-                    className="w-full text-center text-xl py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:outline-none"
-                  />
-                </div>
-                <div className="col-span-3">
+              <div>
                   <label className="block text-xs font-semibold text-gray-700 mb-1">Category Name</label>
                   <input
                     type="text"
@@ -164,7 +149,6 @@ export default function AdminCategoriesPage() {
                     }
                     className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-green-500 focus:outline-none"
                   />
-                </div>
               </div>
 
               <div>

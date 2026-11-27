@@ -11,25 +11,25 @@ export default function StatCard({
   return (
     <div
       onClick={onClick}
-      className={`bg-white rounded-2xl border border-gray-100 p-5 shadow-xs transition-all duration-200 ${
-        onClick ? 'cursor-pointer hover:border-green-300 hover:shadow-md' : 'hover:shadow-xs'
+      className={`bg-[#fffef8] rounded-[1.5rem] border border-[#155d38]/10 p-5 shadow-[0_14px_35px_rgba(9,65,38,.06)] transition-all duration-200 ${
+        onClick ? 'cursor-pointer hover:border-[#155d38]/30 hover:-translate-y-1' : ''
       }`}
     >
       <div className="flex items-center justify-between gap-3 mb-3">
-        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+        <span className="text-xs font-black text-[#607068] uppercase tracking-[0.12em]">
           {title}
         </span>
-        <div className="w-10 h-10 rounded-xl bg-green-50 text-green-700 flex items-center justify-center text-xl select-none">
-          {icon}
+        <div className="w-10 h-10 rounded-full bg-[#e5f7e8] text-[#155d38] flex items-center justify-center text-xl select-none">
+          <Icon name={icon || 'chart'} className="w-5 h-5" />
         </div>
       </div>
 
       <div className="flex items-baseline justify-between gap-2">
-        <h3 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
+        <h3 className="text-3xl sm:text-4xl font-black text-[#10251a] tracking-[-0.055em]">
           {value}
         </h3>
         {badge && (
-          <span className="text-xs bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded-full">
+          <span className="text-xs bg-[#f4511e]/10 text-[#a83816] font-black px-2.5 py-1 rounded-full">
             {badge}
           </span>
         )}
@@ -56,3 +56,5 @@ export default function StatCard({
     </div>
   );
 }
+import Icon from '@/components/Icon';
+

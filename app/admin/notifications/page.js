@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useAdmin } from '@/context/AdminContext';
+import Icon from '@/components/Icon';
 
 export default function AdminNotificationsPage() {
   const { notifications, broadcastNotification } = useAdmin();
@@ -44,7 +45,7 @@ export default function AdminNotificationsPage() {
         {/* Broadcast Form (1 Column) */}
         <div className="bg-white rounded-3xl p-6 sm:p-7 border border-gray-100 shadow-xs">
           <h2 className="font-bold text-gray-900 text-base mb-1 flex items-center gap-2">
-            <span>📢</span> Compose New Broadcast
+            <Icon name="megaphone" className="w-5 h-5" /> Compose new broadcast
           </h2>
           <p className="text-xs text-gray-400 mb-6">
             Notifications are displayed in user notification bells and platform banners.
@@ -52,7 +53,7 @@ export default function AdminNotificationsPage() {
 
           {successMsg && (
             <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs p-3.5 rounded-2xl mb-4 font-semibold flex items-center gap-2">
-              <span>✓</span> Announcement broadcasted to {target.toUpperCase()} audience successfully!
+              <Icon name="check" className="w-4 h-4" /> Announcement broadcast to the {target.toUpperCase()} audience.
             </div>
           )}
 
@@ -134,7 +135,7 @@ export default function AdminNotificationsPage() {
               type="submit"
               className="w-full py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl text-xs sm:text-sm transition shadow-sm"
             >
-              🚀 Dispatch Notification Now
+              Dispatch notification
             </button>
           </form>
         </div>
@@ -158,7 +159,7 @@ export default function AdminNotificationsPage() {
                   <div className="flex items-center justify-between gap-3 mb-2">
                     <div className="flex items-center gap-2">
                       <span className="text-xl">
-                        {notif.type === 'alert' ? '⚠️' : notif.type === 'system' ? '⚙️' : '📢'}
+                        <Icon name={notif.type === 'alert' ? 'warning' : notif.type === 'system' ? 'settings' : 'megaphone'} className="w-5 h-5" />
                       </span>
                       <h3 className="font-bold text-gray-900 text-sm">{notif.title}</h3>
                     </div>

@@ -2,141 +2,67 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
+import Icon from '@/components/Icon';
 import { useCart } from '@/context/CartContext';
+import { useAuth } from '@/context/AuthContext';
 
 export default function ProductCard({ product }) {
   const { addToCart, cartItems } = useCart();
+  const { user } = useAuth();
+  const canShop = user?.accountType === 'customer';
   const [addedAnimation, setAddedAnimation] = useState(false);
   const [imgError, setImgError] = useState(false);
-
-  // Check if item is already in cart
   const cartItem = cartItems?.find((item) => item.id === product.id);
   const currentQuantity = cartItem ? cartItem.quantity : 0;
 
-  const handleAddToCart = (e) => {
-    e.preventDefault();
+  const handleAddToCart = (event) => {
+    event.preventDefault();
+    if (!canShop) return;
     addToCart(product, 1);
     setAddedAnimation(true);
-    setTimeout(() => {
-      setAddedAnimation(false);
-    }, 1200);
+    setTimeout(() => setAddedAnimation(false), 1000);
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden group flex flex-col justify-between">
-      <div>
-        {/* Product Image */}
-        <div className="relative h-48 w-full overflow-hidden bg-gray-50">
-          {product.image && !imgError ? (
-            <img
-              src={product.image}
-              alt={product.name}
-              onError={() => setImgError(true)}
-              loading="lazy"
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
-            />
-          ) : (
-            <div className="w-full h-full bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center text-5xl">
-              {product.emoji || '🌿'}
-            </div>
-          )}
-
-          {/* Stock badge */}
-          {product.stock && (
-            <span className="absolute top-3 right-3 text-[11px] font-semibold bg-white/95 backdrop-blur-sm text-gray-700 px-2.5 py-0.5 rounded-full shadow-sm border border-gray-100">
-              {product.stock} in stock
-            </span>
-          )}
-
-          {/* Organic badge overlay on image */}
-          {product.isOrganic && (
-            <span className="absolute top-3 left-3 text-[11px] font-semibold bg-emerald-600/90 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full shadow-sm">
-              100% Organic
-            </span>
-          )}
+    <article className="group overflow-hidden rounded-[1.75rem] border border-[#155d38]/15 bg-[#fffef8] shadow-[0_18px_45px_rgba(9,65,38,0.07)] flex flex-col hover:-translate-y-1 hover:shadow-[0_24px_55px_rgba(9,65,38,0.13)]">
+      <div className="relative h-52 overflow-hidden bg-[#e5f7e8]">
+        {product.image && !imgError ? (
+          <Image src={product.image} alt={product.name} fill sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw" onError={() => setImgError(true)} className="object-cover group-hover:scale-105 duration-700" />
+        ) : (
+          <div className="w-full h-full grid place-items-center text-[#155d38]" aria-hidden="true"><Icon name="leaf" className="w-16 h-16" strokeWidth={1.25} /></div>
+        )}
+        <div className="absolute inset-x-0 top-0 p-3 flex items-start justify-between gap-2">
+          <span className="rounded-full bg-[#fffef8]/95 px-3 py-1 text-xs font-black text-[#155d38] shadow-sm">{product.category}</span>
+          {Number.isFinite(product.stock) && <span className="rounded-full bg-[#032515]/90 px-3 py-1 text-xs font-bold text-white">{product.stock} left</span>}
         </div>
+      </div>
 
-        <div className="p-4">
-          {/* Badges */}
-          <div className="flex items-center gap-2 mb-2 flex-wrap">
-            <span className="text-xs font-medium text-green-700 bg-green-50 px-2 py-0.5 rounded-full border border-green-100">
-              {product.category}
-            </span>
-            {product.isOrganic && (
-              <span className="text-xs font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">
-                🌱 Farm Direct
-              </span>
-            )}
-          </div>
-
-          <h3 className="font-bold text-gray-800 text-base mb-1 group-hover:text-green-700 transition-colors">
-            {product.name}
-          </h3>
-          <p className="text-gray-500 text-xs line-clamp-2 mb-3 leading-relaxed">
-            {product.description}
-          </p>
-
-          {/* Farmer link */}
+      <div className="p-5 flex-1 flex flex-col">
+        <div className="flex-1">
+          {product.isOrganic && <p className="text-[0.7rem] font-black uppercase tracking-[0.14em] text-[#f4511e] mb-2">Naturally grown</p>}
+          <h3 className="text-xl font-black tracking-[-0.035em] text-[#10251a]">{product.name}</h3>
+          <p className="mt-2 text-sm leading-relaxed text-[#607068] line-clamp-2">{product.description}</p>
           {product.farmerName && (
-            <div className="mb-2.5">
-              <Link
-                href={`/farmers/${product.farmerId}`}
-                className="text-xs text-gray-500 hover:text-green-600 transition-colors inline-flex items-center gap-1 font-medium"
-                title="View Farmer Profile"
-              >
-                <span>🏡</span>
-                <span className="hover:underline">{product.farmerName}</span>
-                <span className="text-gray-300">•</span>
-                <span className="text-gray-400 font-normal">{product.location}</span>
-              </Link>
+            <div className="mt-4 text-xs font-semibold text-[#40564a]">
+              {product.farmerId ? <Link href={`/farmers/${product.farmerId}`} className="hover:text-[#155d38] hover:underline">{product.farmerName} · {product.location}</Link> : <span>{product.farmerName}</span>}
             </div>
           )}
+        </div>
 
-          {/* Rating */}
-          <div className="flex items-center gap-1 mb-3">
-            <span className="text-yellow-400 text-sm">★</span>
-            <span className="text-sm font-semibold text-gray-700">{product.rating}</span>
-            <span className="text-xs text-gray-400">({product.reviews} reviews)</span>
-          </div>
+        <div className="mt-5 pt-4 border-t border-[#155d38]/10 flex items-center justify-between gap-3">
+          <div><span className="text-2xl font-black tracking-[-0.04em] text-[#155d38]">₹{Number(product.price).toFixed(2)}</span><span className="text-xs text-[#607068] ml-1">/ {product.unit}</span></div>
+          {canShop ? (
+            <button onClick={handleAddToCart} disabled={product.stock <= 0} className={`min-h-11 rounded-full px-4 text-xs font-black ${product.stock <= 0 ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : addedAnimation ? 'bg-[#155d38] text-white' : 'bg-[#79e87e] text-[#032515] hover:bg-[#98f29c]'}`} aria-label={`Add ${product.name} to cart`}>
+              {product.stock <= 0 ? 'Sold out' : addedAnimation ? 'Added' : currentQuantity > 0 ? `Add more (${currentQuantity})` : 'Add to cart'}
+            </button>
+          ) : !user ? (
+            <Link href="/login" className="min-h-11 rounded-full border border-[#155d38]/20 px-4 grid place-items-center text-xs font-black text-[#155d38] hover:bg-[#e5f7e8]">Sign in to buy</Link>
+          ) : (
+            <span className="min-h-11 rounded-full bg-[#f4511e]/10 px-4 grid place-items-center text-xs font-black text-[#b63814]">Seller view</span>
+          )}
         </div>
       </div>
-
-      {/* Price + CTA Button */}
-      <div className="p-4 pt-0 border-t border-gray-50 mt-auto">
-        <div className="flex items-center justify-between pt-3">
-          <div>
-            <span className="text-lg font-extrabold text-green-700">₹{product.price.toFixed(2)}</span>
-            <span className="text-xs text-gray-400 ml-1">/ {product.unit}</span>
-          </div>
-
-          <button
-            onClick={handleAddToCart}
-            className={`text-xs font-semibold px-3.5 py-2 rounded-lg transition-all duration-200 shadow-xs flex items-center gap-1.5 ${
-              addedAnimation
-                ? 'bg-emerald-700 text-white scale-105'
-                : 'bg-green-600 text-white hover:bg-green-700 hover:shadow'
-            }`}
-            aria-label={`Add ${product.name} to cart`}
-          >
-            {addedAnimation ? (
-              <>
-                <span>✓</span>
-                <span>Added!</span>
-              </>
-            ) : (
-              <>
-                <span>🛒</span>
-                <span>Add to Cart</span>
-                {currentQuantity > 0 && (
-                  <span className="ml-1 bg-white/20 text-white px-1.5 py-0.2 rounded-full text-[10px]">
-                    ({currentQuantity})
-                  </span>
-                )}
-              </>
-            )}
-          </button>
-        </div>
-      </div>
-    </div>
+    </article>
   );
 }

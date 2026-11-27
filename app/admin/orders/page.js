@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import { useAdmin } from '@/context/AdminContext';
 import Badge from '@/components/admin/Badge';
 import ConfirmDialog from '@/components/admin/ConfirmDialog';
+import Icon from '@/components/Icon';
 
 const PERMITTED_STATUSES = ['Pending', 'Confirmed', 'Shipped', 'Delivered', 'Cancelled'];
 
@@ -90,7 +91,7 @@ export default function AdminOrdersPage() {
       <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-xs flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
         <div className="relative flex-1">
           <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm">
-            🔍
+            <Icon name="search" className="w-4 h-4" />
           </span>
           <input
             type="text"
@@ -112,7 +113,7 @@ export default function AdminOrdersPage() {
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
             >
-              {st === 'Complaints' ? '⚠️ Complaints' : st}
+              {st === 'Complaints' ? 'Complaints' : st}
             </button>
           ))}
         </div>
@@ -147,7 +148,7 @@ export default function AdminOrdersPage() {
                     <td className="py-3 px-4 font-bold text-gray-900">
                       {ord.id}
                       {ord.complaintStatus === 'Open' && (
-                        <span className="ml-1 text-[10px] text-rose-600 font-bold">⚠️ Open Issue</span>
+                        <span className="ml-1 text-[10px] text-rose-600 font-bold inline-flex items-center gap-1"><Icon name="warning" className="w-3 h-3" />Open issue</span>
                       )}
                     </td>
 
@@ -230,11 +231,11 @@ export default function AdminOrdersPage() {
               onClick={() => setSelectedOrder(null)}
               className="absolute top-5 right-5 text-gray-400 hover:text-gray-600 text-lg"
             >
-              ✕
+              <Icon name="close" className="w-5 h-5" />
             </button>
 
             <div className="flex items-center gap-2 mb-4">
-              <span className="text-2xl">📦</span>
+              <Icon name="package" className="w-6 h-6" />
               <div>
                 <h3 className="text-lg font-bold text-gray-900">Order #{selectedOrder.id}</h3>
                 <p className="text-xs text-gray-400">Placed on {new Date(selectedOrder.orderDate).toLocaleString()}</p>

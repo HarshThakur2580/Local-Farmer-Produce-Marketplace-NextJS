@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useAdmin } from '@/context/AdminContext';
 import Badge from '@/components/admin/Badge';
 import ConfirmDialog from '@/components/admin/ConfirmDialog';
+import Icon from '@/components/Icon';
 
 export default function AdminFarmersPage() {
   const { farmers, approveFarmer, rejectFarmer, toggleSuspendFarmer } = useAdmin();
@@ -63,7 +64,7 @@ export default function AdminFarmersPage() {
             href="/admin/approvals"
             className="text-xs bg-amber-50 text-amber-800 font-bold px-3 py-1.5 rounded-xl border border-amber-200 hover:bg-amber-100 transition flex items-center gap-1.5"
           >
-            <span>⏳</span>
+            <Icon name="clock" className="w-4 h-4" />
             <span>
               {farmers.filter((f) => f.status === 'Pending').length} Pending Verifications
             </span>
@@ -75,7 +76,7 @@ export default function AdminFarmersPage() {
       <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-xs flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
         <div className="relative flex-1">
           <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm">
-            🔍
+            <Icon name="search" className="w-4 h-4" />
           </span>
           <input
             type="text"
@@ -132,7 +133,7 @@ export default function AdminFarmersPage() {
                     <td className="py-3.5 px-4">
                       <div className="flex items-center gap-3">
                         <div className="w-9 h-9 rounded-2xl bg-green-50 border border-green-100 text-2xl flex items-center justify-center flex-shrink-0 select-none">
-                          {f.emoji || '👨‍🌾'}
+                          <Icon name="farmer" className="w-6 h-6" />
                         </div>
                         <div>
                           <p className="font-bold text-gray-900">{f.name}</p>
@@ -143,7 +144,7 @@ export default function AdminFarmersPage() {
                     </td>
 
                     <td className="py-3.5 px-4 text-gray-600">
-                      <p className="font-medium">📍 {f.location}</p>
+                      <p className="font-medium flex items-center gap-1"><Icon name="location" className="w-3.5 h-3.5" />{f.location}</p>
                       <p className="text-[10px] text-gray-400">{f.phone}</p>
                     </td>
 
@@ -151,11 +152,11 @@ export default function AdminFarmersPage() {
                       <div className="flex items-center gap-1.5 mb-1">
                         {f.verified ? (
                           <span className="text-[10px] text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full font-bold">
-                            ✓ Verified APEDA/FSSAI
+                            <Icon name="check" className="w-3 h-3" /> Verified account
                           </span>
                         ) : (
                           <span className="text-[10px] text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full font-bold">
-                            ⚠️ Awaiting Audit
+                            <Icon name="warning" className="w-3 h-3" /> Awaiting audit
                           </span>
                         )}
                       </div>
@@ -241,11 +242,11 @@ export default function AdminFarmersPage() {
               onClick={() => setSelectedFarmerDetails(null)}
               className="absolute top-5 right-5 text-gray-400 hover:text-gray-600 text-lg"
             >
-              ✕
+              <Icon name="close" className="w-5 h-5" />
             </button>
 
             <div className="flex items-center gap-3 mb-4">
-              <span className="text-4xl">{selectedFarmerDetails.emoji}</span>
+              <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-green-100 text-green-800"><Icon name="farmer" className="size-6" /></span>
               <div>
                 <h3 className="text-lg font-bold text-gray-900">
                   {selectedFarmerDetails.name}
@@ -263,7 +264,7 @@ export default function AdminFarmersPage() {
               <p><strong>Verification Documents:</strong> {selectedFarmerDetails.verificationDocs}</p>
               <p><strong>Platform Status:</strong> <Badge status={selectedFarmerDetails.status} /></p>
               <p><strong>Lifetime Farm Payouts:</strong> ₹{selectedFarmerDetails.totalRevenue.toLocaleString()}</p>
-              <p><strong>Rating:</strong> ★ {selectedFarmerDetails.rating} / 5.0</p>
+              <p className="flex items-center gap-1"><strong>Rating:</strong> <Icon name="star" className="w-4 h-4" />{selectedFarmerDetails.rating} / 5.0</p>
             </div>
 
             <div className="flex justify-end gap-2">
@@ -272,7 +273,7 @@ export default function AdminFarmersPage() {
                 target="_blank"
                 className="px-4 py-2 border rounded-xl text-xs font-semibold text-gray-700 hover:bg-gray-50"
               >
-                View Public Storefront Page ↗
+                View public storefront
               </Link>
               <button
                 type="button"

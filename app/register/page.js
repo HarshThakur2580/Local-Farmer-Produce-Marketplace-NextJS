@@ -1,8 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import PageWrapper from '@/components/PageWrapper';
+import Icon from '@/components/Icon';
 
 const initialForm = {
   fullName: '',
@@ -22,6 +24,8 @@ export default function RegisterPage() {
   const [showConfirm, setShowConfirm] = useState(false);
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [apiError, setApiError] = useState('');
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -87,25 +91,45 @@ export default function RegisterPage() {
     return e;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setApiError('');
     const newErrors = validate();
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
-    // Simulation success
-    setSubmitted(true);
+
+    setLoading(true);
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setApiError(data.message || 'Registration failed. Please try again.');
+        return;
+      }
+
+      setSubmitted(true);
+    } catch (err) {
+      console.error('Registration submit error:', err);
+      setApiError('Unable to connect to the server. Please check your internet connection.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (submitted) {
     return (
       <PageWrapper>
-        <section className="min-h-[80vh] flex items-center justify-center px-4 py-16 bg-gradient-to-br from-green-50 to-emerald-50">
-          <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 sm:p-12 text-center max-w-md w-full animate-in fade-in">
-            <div className="w-20 h-20 bg-green-100 text-green-700 rounded-full flex items-center justify-center text-4xl mx-auto mb-5 shadow-xs">
-              ✓
-            </div>
+        <section className="auth-shell flex items-center justify-center">
+          <div className="auth-card p-8 sm:p-12 text-center max-w-md w-full animate-in fade-in">
+            <div className="w-20 h-20 bg-[#79e87e] text-[#032515] rounded-full flex items-center justify-center mx-auto mb-5 shadow-xs"><Icon name="check" className="w-9 h-9" strokeWidth={2.4} /></div>
             <h2 className="text-2xl font-extrabold text-gray-900 mb-2">Registration Successful!</h2>
             <p className="text-gray-600 text-sm mb-4">
               Welcome to Local Farmer Marketplace,{' '}
@@ -120,14 +144,14 @@ export default function RegisterPage() {
                 <p><strong>Farm Name:</strong> {formData.farmName}</p>
               )}
               <p className="text-gray-500 text-[11px] pt-1 border-t border-green-200/60">
-                🔒 Note: Frontend registration completed in simulation mode. When the MongoDB backend is connected, accounts will be persisted securely with hashed passwords.
+                Your account is stored in MongoDB and your password is protected with a one-way hash.
               </p>
             </div>
 
             <div className="flex flex-col gap-3">
               <Link
                 href="/login"
-                className="bg-green-600 text-white font-bold py-3.5 rounded-xl hover:bg-green-700 transition shadow-sm text-sm"
+                className="btn-primary w-full"
               >
                 Proceed to Sign In
               </Link>
@@ -163,13 +187,13 @@ export default function RegisterPage() {
 
   return (
     <PageWrapper>
-      <section className="min-h-[85vh] flex items-center justify-center px-4 py-12 bg-gradient-to-br from-green-50 to-emerald-50">
-        <div className="w-full max-w-lg">
-          <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-6 sm:p-10">
+      <section className="auth-shell flex items-center justify-center">
+        <div className="w-full max-w-6xl grid lg:grid-cols-[1.05fr_0.95fr] gap-5 items-stretch">
+          <div className="auth-card p-6 sm:p-10 order-1">
             {/* Header */}
             <div className="text-center mb-8">
-              <span className="text-4xl sm:text-5xl select-none">🌱</span>
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mt-3 mb-1">
+              <span className="eyebrow text-[#155d38]">Join the market</span>
+              <h1 className="text-3xl sm:text-4xl font-black tracking-[-0.055em] text-gray-900 mt-5 mb-2">
                 Create Your Account
               </h1>
               <p className="text-gray-500 text-xs sm:text-sm">
@@ -177,10 +201,18 @@ export default function RegisterPage() {
               </p>
             </div>
 
+            {/* API error banner */}
+            {apiError && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-xs mb-6 flex items-start gap-2">
+                <Icon name="warning" className="w-5 h-5 shrink-0" />
+                <p className="font-semibold">{apiError}</p>
+              </div>
+            )}
+
             {/* Error banner if validation errors exist */}
             {Object.keys(errors).length > 0 && (
               <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-xs mb-6 flex items-start gap-2">
-                <span className="text-sm">⚠️</span>
+                <Icon name="warning" className="w-5 h-5 shrink-0" />
                 <div>
                   <p className="font-bold">Please correct the highlighted errors:</p>
                   <ul className="list-disc list-inside mt-1 space-y-0.5">
@@ -193,22 +225,22 @@ export default function RegisterPage() {
             )}
 
             {/* Account Type Toggle */}
-            <div className="grid grid-cols-2 gap-3 mb-6 p-1.5 bg-gray-100 rounded-2xl">
+            <div className="grid grid-cols-2 gap-3 mb-6 p-1.5 bg-[#e5f7e8] rounded-2xl">
               {[
-                { value: 'customer', label: '🛒 Customer', desc: 'Shop fresh local produce' },
-                { value: 'farmer', label: '👨‍🌾 Farmer', desc: 'Sell your farm harvest' },
-              ].map(({ value, label, desc }) => (
+                { value: 'customer', label: 'Customer', desc: 'Shop fresh local produce', icon: 'cart' },
+                { value: 'farmer', label: 'Farmer', desc: 'Sell your farm harvest', icon: 'farmer' },
+              ].map(({ value, label, desc, icon }) => (
                 <button
                   key={value}
                   type="button"
                   onClick={() => setFormData((p) => ({ ...p, accountType: value }))}
                   className={`py-3 px-3 rounded-xl text-xs sm:text-sm font-semibold transition-all text-left ${
                     formData.accountType === value
-                      ? 'bg-white text-green-700 shadow-sm border border-green-100'
+                      ? 'bg-[#032515] text-white shadow-sm border border-[#032515]'
                       : 'text-gray-500 hover:text-gray-800'
                   }`}
                 >
-                  <div className="font-bold">{label}</div>
+                  <div className="font-bold flex items-center gap-2"><Icon name={icon} className="w-5 h-5" />{label}</div>
                   <div className="text-[11px] font-normal text-gray-400 mt-0.5">{desc}</div>
                 </button>
               ))}
@@ -294,7 +326,7 @@ export default function RegisterPage() {
                 </label>
                 <div className="flex gap-2">
                   <span className="flex items-center px-3 bg-gray-50 border border-gray-200 rounded-xl text-xs text-gray-500 font-semibold select-none">
-                    🇮🇳 +91
+                    +91
                   </span>
                   <input
                     type="tel"
@@ -333,7 +365,7 @@ export default function RegisterPage() {
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-sm select-none"
                     aria-label={showPassword ? 'Hide password' : 'Show password'}
                   >
-                    {showPassword ? '🙈' : '👁️'}
+                    <Icon name={showPassword ? 'eyeOff' : 'eye'} className="w-5 h-5" />
                   </button>
                 </div>
                 {strength && (
@@ -371,11 +403,11 @@ export default function RegisterPage() {
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-sm select-none"
                     aria-label={showConfirm ? 'Hide password' : 'Show password'}
                   >
-                    {showConfirm ? '🙈' : '👁️'}
+                    <Icon name={showConfirm ? 'eyeOff' : 'eye'} className="w-5 h-5" />
                   </button>
                 </div>
                 {formData.confirmPassword && formData.confirmPassword === formData.password && (
-                  <p className="text-green-600 text-xs mt-1 font-medium">✓ Passwords match</p>
+                  <p className="text-green-700 text-xs mt-1 font-medium flex items-center gap-1"><Icon name="check" className="w-4 h-4" />Passwords match</p>
                 )}
                 {errors.confirmPassword && <p className="text-red-500 text-xs mt-1">{errors.confirmPassword}</p>}
               </div>
@@ -403,9 +435,20 @@ export default function RegisterPage() {
               {/* Submit Button */}
               <button
                 type="submit"
-                className="w-full bg-green-600 text-white font-bold py-3.5 rounded-xl hover:bg-green-700 transition shadow-md text-sm mt-4"
+                disabled={loading}
+                className="btn-primary w-full mt-4 disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                Create {formData.accountType === 'farmer' ? '👨‍🌾 Farmer' : '🛒 Customer'} Account
+                {loading ? (
+                  <>
+                    <svg className="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                    </svg>
+                    Creating Account...
+                  </>
+                ) : (
+                  `Create ${formData.accountType === 'farmer' ? 'Farmer' : 'Customer'} Account`
+                )}
               </button>
             </form>
 
@@ -417,6 +460,11 @@ export default function RegisterPage() {
               </Link>
             </p>
           </div>
+          <aside className="relative min-h-[34rem] lg:min-h-0 overflow-hidden rounded-[2.25rem] border border-white/15 order-2">
+            <Image src="https://images.unsplash.com/photo-1488459716781-31db52582fe9?auto=format&fit=crop&w=1200&q=88" alt="A colorful local farmers market" fill priority sizes="(min-width: 1024px) 45vw, 100vw" className="object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#032515] via-[#032515]/20 to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 p-7 sm:p-9 text-white"><span className="grid w-12 h-12 place-items-center rounded-full bg-[#79e87e] text-[#032515]"><Icon name="users" className="w-6 h-6" /></span><h2 className="text-3xl font-black tracking-[-0.045em] mt-5">One market, built around your role.</h2><p className="text-white/65 mt-3">Shop as a customer or create a farm storefront as a grower.</p></div>
+          </aside>
         </div>
       </section>
     </PageWrapper>

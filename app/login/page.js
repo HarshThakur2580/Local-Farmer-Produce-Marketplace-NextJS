@@ -1,261 +1,89 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import PageWrapper from '@/components/PageWrapper';
+import Icon from '@/components/Icon';
+import { useAuth } from '@/context/AuthContext';
 
 export default function LoginPage() {
-  const [role, setRole] = useState('customer');
+  const router = useRouter();
+  const { user, isLoading: sessionLoading, refreshSession, logout } = useAuth();
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
-  const [errors, setErrors] = useState({});
-  const [loggedInUser, setLoggedInUser] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleChange = (e) => {
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-    if (errors[e.target.name]) {
-      setErrors((prev) => ({ ...prev, [e.target.name]: '' }));
-    }
-  };
-
-  const validate = () => {
-    const newErrors = {};
-    const emailVal = formData.email.trim();
-    if (!emailVal) {
-      newErrors.email = 'Email address is required.';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
-      newErrors.email = 'Please enter a valid email address.';
-    }
-
-    if (!formData.password) {
-      newErrors.password = 'Password is required.';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters.';
-    }
-
-    return newErrors;
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const newErrors = validate();
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
-
-    // Explicitly do NOT store passwords in localStorage.
-    // Set in-memory session simulation state only.
-    setLoggedInUser({
-      email: formData.email.trim(),
-      role,
-      name: role === 'farmer' ? 'Ravi Kumar (Demo Farmer)' : 'Ananya (Demo Customer)',
-    });
-  };
-
-  const handleDemoFill = (demoRole) => {
-    setRole(demoRole);
-    if (demoRole === 'farmer') {
-      setFormData({
-        email: 'ravi@greenvalley.farm',
-        password: 'Password123!',
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setError('');
+    setLoading(true);
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: formData.email.trim(), password: formData.password }),
       });
-    } else {
-      setFormData({
-        email: 'customer@farmfresh.market',
-        password: 'Password123!',
-      });
+      const data = await response.json();
+      if (!response.ok) { setError(data.message || 'Invalid email or password.'); return; }
+      await refreshSession();
+      router.push('/');
+      router.refresh();
+    } catch (requestError) {
+      console.error('Login error:', requestError);
+      setError('Unable to connect to the authentication service.');
+    } finally {
+      setLoading(false);
     }
-    setErrors({});
   };
 
   return (
     <PageWrapper>
-      <section className="min-h-[85vh] flex items-center justify-center px-4 py-16 bg-gradient-to-br from-green-50 to-emerald-50">
-        <div className="w-full max-w-md">
-          {/* Card */}
-          <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-6 sm:p-8">
-            {/* Logged in success view */}
-            {loggedInUser ? (
-              <div className="text-center py-4 animate-in fade-in">
-                <div className="w-20 h-20 bg-green-100 text-green-700 rounded-full flex items-center justify-center text-4xl mx-auto mb-4">
-                  ✓
-                </div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-1">
-                  Welcome back, {loggedInUser.name}!
-                </h2>
-                <p className="text-sm text-green-700 font-semibold mb-4 capitalize">
-                  Active Role: {loggedInUser.role === 'farmer' ? '👨‍🌾 Farmer / Producer' : '🛒 Customer / Buyer'}
-                </p>
+      <section className="auth-shell grid place-items-center">
+        <div className="w-full max-w-6xl grid lg:grid-cols-[1.05fr_0.95fr] gap-5 items-stretch">
 
-                <div className="bg-gray-50 border border-gray-200 rounded-2xl p-4 text-xs text-gray-600 text-left mb-6 space-y-1.5">
-                  <p><strong>Signed in as:</strong> {loggedInUser.email}</p>
-                  <p><strong>Session:</strong> Active (Simulation Mode)</p>
-                  <p className="text-[11px] text-gray-400 pt-1 border-t border-gray-200">
-                    ℹ️ Frontend validation complete. No real passwords are stored in localStorage. Full server session management will be wired when MongoDB auth backend is connected.
-                  </p>
-                </div>
-
-                <div className="space-y-2.5">
-                  <Link
-                    href="/products"
-                    className="block w-full bg-green-600 text-white font-bold py-3 rounded-xl hover:bg-green-700 transition text-sm shadow-sm"
-                  >
-                    Browse Market Products
-                  </Link>
-                  <Link
-                    href="/cart"
-                    className="block w-full border border-gray-200 text-gray-700 font-semibold py-2.5 rounded-xl hover:bg-gray-50 transition text-xs"
-                  >
-                    View Shopping Cart
-                  </Link>
-                  <button
-                    onClick={() => {
-                      setLoggedInUser(null);
-                      setFormData({ email: '', password: '' });
-                    }}
-                    className="text-xs text-red-500 hover:text-red-700 font-semibold pt-2"
-                  >
-                    Sign Out Simulation
-                  </button>
-                </div>
-              </div>
+          <div className="auth-card p-6 sm:p-10 flex flex-col justify-center order-1">
+            {sessionLoading ? (
+              <div className="py-20 text-center"><span className="inline-block w-9 h-9 rounded-full border-2 border-[#155d38] border-t-transparent animate-spin" /><p className="mt-4 text-sm text-[#607068]">Checking your session…</p></div>
+            ) : user ? (
+              <SignedInCard user={user} logout={logout} />
             ) : (
-              /* Regular Login Form */
-              <div>
-                {/* Header */}
-                <div className="text-center mb-6">
-                  <span className="text-5xl select-none">🌿</span>
-                  <h1 className="text-2xl font-extrabold text-gray-900 mt-2 mb-1">Welcome Back</h1>
-                  <p className="text-gray-500 text-xs sm:text-sm">
-                    Sign in to your Local Farmer Produce Marketplace account
-                  </p>
-                </div>
-
-                {/* Role Selector Tabs */}
-                <div className="grid grid-cols-2 gap-2 mb-6 p-1 bg-gray-100 rounded-2xl">
-                  {[
-                    { value: 'customer', label: '🛒 Customer', desc: 'Buy fresh produce' },
-                    { value: 'farmer', label: '👨‍🌾 Farmer', desc: 'Manage farm produce' },
-                  ].map(({ value, label }) => (
-                    <button
-                      key={value}
-                      type="button"
-                      onClick={() => {
-                        setRole(value);
-                        setErrors({});
-                      }}
-                      className={`py-2.5 px-3 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
-                        role === value
-                          ? 'bg-white text-green-700 shadow-sm border border-green-100'
-                          : 'text-gray-500 hover:text-gray-700'
-                      }`}
-                    >
-                      {label}
-                    </button>
-                  ))}
-                </div>
-
-                {/* Quick demo credentials filler */}
-                <div className="flex items-center justify-between bg-green-50/70 border border-green-100 rounded-xl px-3 py-2 text-[11px] text-green-800 mb-5">
-                  <span>Fast test:</span>
-                  <div className="flex gap-2">
-                    <button
-                      type="button"
-                      onClick={() => handleDemoFill('customer')}
-                      className="underline font-semibold hover:text-green-950"
-                    >
-                      Demo Customer
-                    </button>
-                    <span>•</span>
-                    <button
-                      type="button"
-                      onClick={() => handleDemoFill('farmer')}
-                      className="underline font-semibold hover:text-green-950"
-                    >
-                      Demo Farmer
-                    </button>
-                  </div>
-                </div>
-
-                {/* Form */}
-                <form onSubmit={handleSubmit} className="space-y-4" noValidate>
-                  {/* Email */}
-                  <div>
-                    <label className="block text-xs font-semibold text-gray-700 mb-1">
-                      Email Address <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      placeholder={role === 'farmer' ? 'farmer@myfarm.com' : 'you@example.com'}
-                      className={`w-full px-4 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-500 transition ${
-                        errors.email ? 'border-red-400 bg-red-50/50' : 'border-gray-200'
-                      }`}
-                    />
-                    {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
-                  </div>
-
-                  {/* Password */}
-                  <div>
-                    <div className="flex justify-between items-center mb-1">
-                      <label className="block text-xs font-semibold text-gray-700">
-                        Password <span className="text-red-500">*</span>
-                      </label>
-                      <button
-                        type="button"
-                        onClick={() => alert('Password reset will be available once email integration is configured.')}
-                        className="text-[11px] text-green-600 hover:underline"
-                      >
-                        Forgot password?
-                      </button>
-                    </div>
-                    <div className="relative">
-                      <input
-                        type={showPassword ? 'text' : 'password'}
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        placeholder="Enter your password"
-                        className={`w-full px-4 py-2.5 pr-10 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-500 transition ${
-                          errors.password ? 'border-red-400 bg-red-50/50' : 'border-gray-200'
-                        }`}
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-sm select-none"
-                        aria-label={showPassword ? 'Hide password' : 'Show password'}
-                      >
-                        {showPassword ? '🙈' : '👁️'}
-                      </button>
-                    </div>
-                    {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
-                  </div>
-
-                  {/* Submit */}
-                  <button
-                    type="submit"
-                    className="w-full bg-green-600 text-white font-bold py-3.5 rounded-xl hover:bg-green-700 transition shadow-md text-sm mt-3"
-                  >
-                    Sign In as {role === 'farmer' ? '👨‍🌾 Farmer' : '🛒 Customer'}
-                  </button>
+              <>
+                <div className="mb-8"><span className="eyebrow text-[#155d38]">Account access</span><h2 className="text-4xl font-black tracking-[-0.055em] mt-5">Sign in to Farm Fresh</h2><p className="text-[#607068] mt-3">Use the account you created as a customer or farmer.</p></div>
+                {error && <div role="alert" className="mb-5 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm font-semibold text-red-700">{error}</div>}
+                <form onSubmit={handleSubmit} className="space-y-5">
+                  <label className="block"><span className="block text-sm font-black mb-2">Email address</span><input type="email" required autoComplete="email" value={formData.email} onChange={(event) => setFormData((current) => ({ ...current, email: event.target.value }))} className="input" placeholder="you@example.com" /></label>
+                  <label className="block"><span className="block text-sm font-black mb-2">Password</span><div className="relative"><input type={showPassword ? 'text' : 'password'} required minLength={8} autoComplete="current-password" value={formData.password} onChange={(event) => setFormData((current) => ({ ...current, password: event.target.value }))} className="input pr-20" placeholder="Your password" /><button type="button" onClick={() => setShowPassword((value) => !value)} className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-black text-[#155d38]">{showPassword ? 'Hide' : 'Show'}</button></div></label>
+                  <button type="submit" disabled={loading} className="btn-primary w-full disabled:opacity-60">{loading ? 'Signing in…' : 'Sign in'}</button>
                 </form>
-
-                {/* Register Link */}
-                <p className="text-center text-xs sm:text-sm text-gray-500 mt-6 pt-4 border-t border-gray-100">
-                  Don&apos;t have an account?{' '}
-                  <Link href="/register" className="text-green-600 font-bold hover:underline">
-                    Create one for free
-                  </Link>
-                </p>
-              </div>
+                <p className="text-center text-sm text-[#607068] mt-7 pt-6 border-t border-[#155d38]/10">New to the market? <Link href="/register" className="font-black text-[#155d38] hover:underline">Create an account</Link></p>
+              </>
             )}
           </div>
+          <aside className="relative min-h-[34rem] lg:min-h-0 overflow-hidden rounded-[2.25rem] border border-white/15 order-2">
+            <Image src="https://images.unsplash.com/photo-1523741543316-beb7fc7023d8?auto=format&fit=crop&w=1200&q=88" alt="Green crop rows on a local farm" fill priority sizes="(min-width: 1024px) 45vw, 100vw" className="object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#032515] via-[#032515]/20 to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 p-7 sm:p-9 text-white"><span className="grid w-12 h-12 place-items-center rounded-full bg-[#79e87e] text-[#032515]"><Icon name="lock" className="w-6 h-6" /></span><h2 className="text-3xl font-black tracking-[-0.045em] mt-5">Your local market is ready when you are.</h2><p className="text-white/65 mt-3">Sign in to return to your private customer cart or farmer workspace.</p></div>
+          </aside>
         </div>
       </section>
     </PageWrapper>
+  );
+}
+
+function SignedInCard({ user, logout }) {
+  return (
+    <div className="text-center py-6">
+      <div className="mx-auto w-16 h-16 rounded-full bg-[#79e87e] text-[#032515] grid place-items-center"><Icon name="check" className="w-8 h-8" strokeWidth={2.4} /></div>
+      <span className="eyebrow text-[#155d38] mt-6">Session active</span>
+      <h1 className="text-3xl font-black tracking-[-0.05em] mt-5">You are already signed in</h1>
+      <p className="text-[#607068] mt-2">{user.fullName} · {user.email}</p>
+      <div className="grid gap-3 mt-8">
+        <Link href={user.accountType === 'farmer' ? '/' : '/products'} className="btn-primary w-full">Open your workspace</Link>
+        <button onClick={logout} className="btn-secondary w-full text-[#155d38]">Sign out</button>
+      </div>
+    </div>
   );
 }

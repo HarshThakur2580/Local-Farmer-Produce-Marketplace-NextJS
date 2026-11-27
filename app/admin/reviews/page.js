@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { useAdmin } from '@/context/AdminContext';
+import Icon from '@/components/Icon';
 import Badge from '@/components/admin/Badge';
 import ConfirmDialog from '@/components/admin/ConfirmDialog';
 
@@ -57,7 +58,7 @@ export default function AdminReviewsPage() {
       <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-xs flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
         <div className="relative flex-1">
           <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm">
-            🔍
+            <Icon name="search" className="w-4 h-4" />
           </span>
           <input
             type="text"
@@ -113,13 +114,13 @@ export default function AdminReviewsPage() {
                   <div className="flex items-center gap-2">
                     <div className="flex text-yellow-400 text-sm">
                       {Array.from({ length: 5 }).map((_, i) => (
-                        <span key={i}>{i < rev.rating ? '★' : '☆'}</span>
+                        <Icon key={i} name="star" className={`w-4 h-4 ${i < rev.rating ? 'fill-current' : 'opacity-25'}`} />
                       ))}
                     </div>
                     <span className="text-[11px] text-gray-400">{rev.date}</span>
                     {rev.reportCount > 0 && (
                       <span className="text-[10px] bg-rose-100 text-rose-700 font-bold px-2 py-0.5 rounded-full">
-                        ⚠️ Reported {rev.reportCount} times
+                        <Icon name="warning" className="w-3.5 h-3.5" /> Reported {rev.reportCount} times
                       </span>
                     )}
                   </div>
@@ -138,7 +139,7 @@ export default function AdminReviewsPage() {
                     onClick={() => moderateReview(rev.id, 'Approved')}
                     className="px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-xs font-bold rounded-xl transition"
                   >
-                    ✓ Approve Review
+                    Approve review
                   </button>
                 )}
 

@@ -1,38 +1,31 @@
-// Farmer model schema (plain JS — to be connected to a DB later)
+import mongoose from 'mongoose';
 
-/**
- * @typedef {Object} Farmer
- * @property {string} id
- * @property {string} name
- * @property {string} farmName
- * @property {string} location
- * @property {string} bio
- * @property {string} email
- * @property {string} phone
- * @property {string} avatarUrl
- * @property {string[]} specialties  - e.g. ["vegetables", "fruits"]
- * @property {number} rating
- * @property {Date} joinedAt
- */
+const FarmerSchema = new mongoose.Schema(
+  {
+    owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, unique: true, index: true },
+    name: { type: String, required: true, trim: true, maxlength: 100 },
+    farmName: { type: String, required: true, trim: true, minlength: 2, maxlength: 120 },
+    location: { type: String, required: true, trim: true, minlength: 2, maxlength: 160 },
+    bio: { type: String, required: true, trim: true, minlength: 20, maxlength: 1500 },
+    email: { type: String, required: true, trim: true, lowercase: true },
+    phone: { type: String, required: true, trim: true },
+    specialties: [{ type: String, trim: true, maxlength: 80 }],
+    yearsActive: { type: Number, min: 0, max: 100, default: 0 },
+    isVerified: { type: Boolean, default: false },
+    badge: { type: String, trim: true, maxlength: 80, default: 'Community Farmer' },
+    rating: { type: Number, min: 0, max: 5, default: 0 },
+  },
+  { timestamps: true }
+);
 
-/**
- * Creates a new Farmer object.
- * @param {Partial<Farmer>} data
- * @returns {Farmer}
- */
-export function createFarmer(data) {
-  return {
-    id: data.id || crypto.randomUUID(),
-    name: data.name || '',
-    farmName: data.farmName || '',
-    location: data.location || '',
-    bio: data.bio || '',
-    email: data.email || '',
-    phone: data.phone || '',
-    avatarUrl: data.avatarUrl || '',
-    specialties: data.specialties || [],
-    rating: data.rating || 0,
-    joinedAt: data.joinedAt || new Date(),
-  };
-}
+FarmerSchema.set('toJSON', {
+  transform(_document, returnedObject) {
+    returnedObject.id = returnedObject._id.toString();
+    delete returnedObject._id;
+    delete returnedObject.__v;
+    delete returnedObject.owner;
+    return returnedObject;
+  },
+});
 
+export default mongoose.models.Farmer || mongoose.model('Farmer', FarmerSchema);

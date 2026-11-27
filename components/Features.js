@@ -1,71 +1,35 @@
 const features = [
-  {
-    icon: '🥕',
-    title: 'Fresh & Organic Produce',
-    description:
-      'Browse a wide variety of seasonal vegetables, fruits, and grains sourced directly from verified local farms.',
-  },
-  {
-    icon: '🤝',
-    title: 'Direct Farm-to-Table',
-    description:
-      'Cut out the middlemen. Buy directly from farmers and ensure fair prices for both buyers and growers.',
-  },
-  {
-    icon: '📍',
-    title: 'Locally Sourced',
-    description:
-      'Support your community by purchasing from farmers in your region, reducing food miles and carbon footprint.',
-  },
-  {
-    icon: '💰',
-    title: 'Affordable Prices',
-    description:
-      'Get the best value for fresh produce. Farmers set competitive prices without retail markups.',
-  },
-  {
-    icon: '🚚',
-    title: 'Fast & Reliable Delivery',
-    description:
-      'Choose farm pickup or doorstep delivery options that work best for your schedule and location.',
-  },
-  {
-    icon: '⭐',
-    title: 'Trusted Reviews',
-    description:
-      'Read verified reviews from real customers to make informed purchasing decisions every time.',
-  },
+  { tag: '01', title: 'Know your grower', description: 'Every farm profile tells you who produced your food, where it came from, and what makes it special.' },
+  { tag: '02', title: 'Buy what is in season', description: 'Browse real listings published by local farmers instead of a fixed catalogue of placeholder produce.' },
+  { tag: '03', title: 'Keep value local', description: 'A direct connection gives customers fresher choices and farmers more control over pricing.' },
 ];
 
 export default function Features() {
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
-      <div className="max-w-7xl mx-auto">
-        {/* Section Header */}
-        <div className="text-center mb-14">
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4">
-            Why Choose Our Marketplace?
-          </h2>
-          <p className="text-lg text-gray-500 max-w-2xl mx-auto">
-            We make it simple, transparent, and rewarding to buy and sell local produce.
+    <section className="bg-[#e5f7e8] px-4 py-20 sm:py-28">
+      <div className="section-wrap">
+        <div className="grid lg:grid-cols-[0.8fr_1.2fr] gap-10 lg:gap-20 items-end">
+          <div>
+            <span className="eyebrow text-[#155d38]">Why Farm Fresh</span>
+            <h2 className="section-title mt-6 text-[#10251a]">Food feels different when you know its story.</h2>
+          </div>
+          <p className="text-lg sm:text-xl leading-relaxed text-[#40564a] max-w-2xl lg:justify-self-end">
+            The marketplace turns anonymous grocery shopping into a relationship between nearby farms and the people they feed.
           </p>
         </div>
 
-        {/* Feature Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {features.map((feature) => (
-            <div
-              key={feature.title}
-              className="bg-green-50 rounded-2xl p-7 hover:shadow-md transition-shadow border border-green-100"
-            >
-              <div className="text-4xl mb-4">{feature.icon}</div>
-              <h3 className="text-lg font-bold text-gray-800 mb-2">{feature.title}</h3>
-              <p className="text-gray-600 text-sm leading-relaxed">{feature.description}</p>
-            </div>
+        <div className="grid md:grid-cols-3 gap-4 mt-14">
+          {features.map((feature, index) => (
+            <article key={feature.title} className={`rounded-[2rem] p-7 sm:p-8 min-h-72 flex flex-col justify-between border ${index === 1 ? 'bg-[#f4511e] border-[#f4511e] text-white md:-translate-y-5' : 'bg-[#fffef8] border-[#155d38]/15 text-[#10251a]'}`}>
+              <span className="text-xs font-black tracking-[0.16em] opacity-60">{feature.tag}</span>
+              <div>
+                <h3 className="text-2xl font-black tracking-[-0.04em]">{feature.title}</h3>
+                <p className={`mt-3 leading-relaxed ${index === 1 ? 'text-white/75' : 'text-[#607068]'}`}>{feature.description}</p>
+              </div>
+            </article>
           ))}
         </div>
       </div>
     </section>
   );
 }
-

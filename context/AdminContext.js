@@ -1,81 +1,70 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, useMemo } from 'react';
-import {
-  initialCustomers,
-  initialFarmers,
-  initialCategories,
-  initialAdminProducts,
-  initialOrders,
-  initialPayments,
-  initialReviews,
-  initialNotifications,
-  initialAuditLogs,
-  initialPlatformSettings,
-} from '@/lib/adminData';
-import { SEEDED_SUPER_ADMIN, validateAdminCredentials, createAuditEntry } from '@/lib/adminAuth';
+import { initialPlatformSettings } from '@/lib/adminData';
+import { createAuditEntry } from '@/lib/adminAuth';
+import { useAdminAuth } from '@/context/AdminAuthContext';
 
 const AdminContext = createContext(null);
 
-const STORAGE_PREFIX = 'freshfarm_admin_';
-
 export function AdminProvider({ children }) {
-  // Admin Session State
-  const [adminUser, setAdminUser] = useState(SEEDED_SUPER_ADMIN);
-  const [isAuthenticated, setIsAuthenticated] = useState(true); // Pre-authenticated with seeded Super Admin
-  const [isLoaded, setIsLoaded] = useState(false);
+  const { admin, isLoading: adminAuthLoading, logoutAdmin } = useAdminAuth();
+  const adminUser = admin ? {
+    id: 'environment-super-admin',
+    name: admin.name,
+    email: admin.email,
+    role: 'super_admin',
+    department: 'Platform Administration',
+    permissions: ['ALL_ACCESS'],
+  } : null;
+  const isAuthenticated = Boolean(admin);
+  const [loadedAdminEmail, setLoadedAdminEmail] = useState(null);
 
   // Entities State
-  const [customers, setCustomers] = useState(initialCustomers);
-  const [farmers, setFarmers] = useState(initialFarmers);
-  const [categories, setCategories] = useState(initialCategories);
-  const [products, setProducts] = useState(initialAdminProducts);
-  const [orders, setOrders] = useState(initialOrders);
-  const [payments, setPayments] = useState(initialPayments);
-  const [reviews, setReviews] = useState(initialReviews);
-  const [notifications, setNotifications] = useState(initialNotifications);
-  const [auditLogs, setAuditLogs] = useState(initialAuditLogs);
+  const [customers, setCustomers] = useState([]);
+  const [farmers, setFarmers] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [payments, setPayments] = useState([]);
+  const [reviews, setReviews] = useState([]);
+  const [notifications, setNotifications] = useState([]);
+  const [auditLogs, setAuditLogs] = useState([]);
   const [settings, setSettings] = useState(initialPlatformSettings);
 
-  // Load from localStorage on client mount if available
+  // Load the authoritative marketplace state from MongoDB after admin authentication.
   useEffect(() => {
-    try {
-      const storedAuth = localStorage.getItem(`${STORAGE_PREFIX}session`);
-      if (storedAuth) {
-        const parsed = JSON.parse(storedAuth);
-        setAdminUser(parsed.user);
-        setIsAuthenticated(parsed.isAuthenticated);
+    if (!admin) return;
+    let cancelled = false;
+
+    queueMicrotask(async () => {
+      if (cancelled) return;
+
+      try {
+        const response = await fetch('/api/admin/data', { cache: 'no-store' });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message || 'Unable to load administrator data.');
+        if (cancelled) return;
+        setCustomers(data.customers || []);
+        setFarmers(data.farmers || []);
+        setProducts(data.products || []);
+        setCategories(data.categories || []);
+        setOrders(data.orders || []);
+        setPayments(data.payments || []);
+        setReviews(data.reviews || []);
+        setNotifications(data.notifications || []);
+        setAuditLogs(data.auditLogs || []);
+      } catch (e) {
+        console.error('Admin database load error:', e);
+      } finally {
+        if (!cancelled) setLoadedAdminEmail(admin.email);
       }
+    });
 
-      const storedFarmers = localStorage.getItem(`${STORAGE_PREFIX}farmers`);
-      if (storedFarmers) setFarmers(JSON.parse(storedFarmers));
-
-      const storedProducts = localStorage.getItem(`${STORAGE_PREFIX}products`);
-      if (storedProducts) setProducts(JSON.parse(storedProducts));
-
-      const storedOrders = localStorage.getItem(`${STORAGE_PREFIX}orders`);
-      if (storedOrders) setOrders(JSON.parse(storedOrders));
-
-      const storedCategories = localStorage.getItem(`${STORAGE_PREFIX}categories`);
-      if (storedCategories) setCategories(JSON.parse(storedCategories));
-
-      const storedCustomers = localStorage.getItem(`${STORAGE_PREFIX}customers`);
-      if (storedCustomers) setCustomers(JSON.parse(storedCustomers));
-
-      const storedPayments = localStorage.getItem(`${STORAGE_PREFIX}payments`);
-      if (storedPayments) setPayments(JSON.parse(storedPayments));
-
-      const storedReviews = localStorage.getItem(`${STORAGE_PREFIX}reviews`);
-      if (storedReviews) setReviews(JSON.parse(storedReviews));
-
-      const storedLogs = localStorage.getItem(`${STORAGE_PREFIX}audit_logs`);
-      if (storedLogs) setAuditLogs(JSON.parse(storedLogs));
-    } catch (e) {
-      console.warn('Admin storage load error:', e);
-    } finally {
-      setIsLoaded(true);
-    }
-  }, []);
+    return () => {
+      cancelled = true;
+    };
+  }, [admin]);
 
   // Helper to append audit log
   const logAction = (action, target, details) => {
@@ -85,46 +74,12 @@ export function AdminProvider({ children }) {
       details,
       adminName: adminUser?.name || 'Super Administrator',
     });
-    setAuditLogs((prev) => {
-      const updated = [entry, ...prev];
-      try {
-        localStorage.setItem(`${STORAGE_PREFIX}audit_logs`, JSON.stringify(updated));
-      } catch (e) {
-        console.error(e);
-      }
-      return updated;
-    });
-  };
-
-  // Auth Functions
-  const loginAdmin = (email, password) => {
-    const res = validateAdminCredentials(email, password);
-    if (res.success) {
-      setAdminUser(res.user);
-      setIsAuthenticated(true);
-      try {
-        localStorage.setItem(
-          `${STORAGE_PREFIX}session`,
-          JSON.stringify({ isAuthenticated: true, user: res.user })
-        );
-      } catch (e) {
-        console.error(e);
-      }
-      logAction('ADMIN_LOGIN', 'Admin Portal', `Successful login by ${res.user.email}`);
-      return { success: true };
-    }
-    return { success: false, message: res.message };
-  };
-
-  const logoutAdmin = () => {
-    logAction('ADMIN_LOGOUT', 'Admin Portal', `Logout by ${adminUser?.email}`);
-    setIsAuthenticated(false);
-    setAdminUser(null);
-    try {
-      localStorage.removeItem(`${STORAGE_PREFIX}session`);
-    } catch (e) {
-      console.error(e);
-    }
+    setAuditLogs((prev) => [entry, ...prev]);
+    fetch('/api/admin/audit-logs', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action, target, details }),
+    }).catch((error) => console.error('Audit log persistence failed:', error));
   };
 
   // ==================== CUSTOMER ACTIONS ====================
@@ -258,7 +213,6 @@ export function AdminProvider({ children }) {
       name: categoryData.name,
       slug: categoryData.slug || categoryData.name.toLowerCase().replace(/[^a-z0-9]/g, '-'),
       description: categoryData.description || 'Agricultural produce category.',
-      icon: categoryData.icon || '🌾',
       productsCount: 0,
       status: 'Active',
       createdAt: new Date().toISOString().split('T')[0],
@@ -428,9 +382,8 @@ export function AdminProvider({ children }) {
       value={{
         adminUser,
         isAuthenticated,
-        loginAdmin,
         logoutAdmin,
-        isLoaded,
+        isLoaded: !adminAuthLoading && (!admin || loadedAdminEmail === admin.email),
         customers,
         toggleSuspendCustomer,
         updateCustomerNotes,
