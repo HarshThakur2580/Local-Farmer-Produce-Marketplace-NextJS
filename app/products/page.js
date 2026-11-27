@@ -94,7 +94,7 @@ export default function ProductsPage() {
           </p>
           </div>
           {user?.accountType === 'farmer' ? (
-            <Link href="/products/new" className="btn-primary self-start">Add produce</Link>
+            <Link href="/products/new" className="btn-primary self-start">Add product</Link>
           ) : !user ? (
             <Link href="/login" className="btn-primary self-start">Farmer sign in</Link>
           ) : (

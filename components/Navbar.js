@@ -56,7 +56,7 @@ export default function Navbar() {
 
           {!authLoading && user ? (
             <>
-              {user.accountType === 'farmer' && <Link href="/products/new" className="nav-pill text-sm font-bold text-[#79e87e] hover:bg-white/10">Add produce</Link>}
+              {user.accountType === 'farmer' && <Link href="/products/new" className="nav-pill text-sm font-bold text-[#79e87e] hover:bg-white/10">Add product</Link>}
               <span className="hidden xl:block max-w-28 truncate text-sm font-semibold text-white/75" title={user.email}>{user.fullName}</span>
               <button onClick={logout} className="nav-pill bg-[#79e87e] text-[#032515] text-sm font-black hover:bg-[#98f29c]">Sign out</button>
             </>

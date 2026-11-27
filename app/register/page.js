@@ -15,7 +15,6 @@ const initialForm = {
   accountType: 'customer',
   farmName: '',
   location: '',
-  agreeTerms: false,
 };
 
 export default function RegisterPage() {
@@ -81,11 +80,6 @@ export default function RegisterPage() {
       e.confirmPassword = 'Please confirm your password.';
     } else if (formData.confirmPassword !== formData.password) {
       e.confirmPassword = 'Passwords do not match.';
-    }
-
-    // Terms
-    if (!formData.agreeTerms) {
-      e.agreeTerms = 'You must agree to the Terms of Service & Privacy Policy.';
     }
 
     return e;
@@ -410,26 +404,6 @@ export default function RegisterPage() {
                   <p className="text-green-700 text-xs mt-1 font-medium flex items-center gap-1"><Icon name="check" className="w-4 h-4" />Passwords match</p>
                 )}
                 {errors.confirmPassword && <p className="text-red-500 text-xs mt-1">{errors.confirmPassword}</p>}
-              </div>
-
-              {/* Terms Checkbox */}
-              <div className="pt-2">
-                <label className="flex items-start gap-2.5 cursor-pointer select-none">
-                  <input
-                    type="checkbox"
-                    name="agreeTerms"
-                    checked={formData.agreeTerms}
-                    onChange={handleChange}
-                    className="mt-1 w-4 h-4 accent-green-600 rounded"
-                  />
-                  <span className="text-xs text-gray-600 leading-relaxed">
-                    I agree to the{' '}
-                    <Link href="#" className="text-green-600 hover:underline font-semibold">Terms of Service</Link>
-                    {' '}and{' '}
-                    <Link href="#" className="text-green-600 hover:underline font-semibold">Privacy Policy</Link>.
-                  </span>
-                </label>
-                {errors.agreeTerms && <p className="text-red-500 text-xs mt-1">{errors.agreeTerms}</p>}
               </div>
 
               {/* Submit Button */}

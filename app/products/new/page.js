@@ -50,7 +50,7 @@ export default function NewProductPage() {
         <div className="w-full max-w-6xl grid lg:grid-cols-[1.05fr_0.95fr] gap-5 items-stretch">
           <div className="auth-card p-6 sm:p-10 order-1">
             <Link href="/products" className="text-sm font-black text-[#155d38] hover:underline">Back to market</Link>
-            <div className="mt-7"><span className="eyebrow text-[#155d38]">New harvest</span><h1 className="text-3xl sm:text-5xl font-black tracking-[-0.055em] mt-5">Publish fresh produce</h1><p className="text-[#607068] mt-3 mb-8">Add a live listing customers can discover in the marketplace.</p></div>
+            <div className="mt-7"><span className="eyebrow text-[#155d38]">New harvest</span><h1 className="text-3xl sm:text-5xl font-black tracking-[-0.055em] mt-5">Publish fresh product</h1><p className="text-[#607068] mt-3 mb-8">Add a live listing customers can discover in the marketplace.</p></div>
 
             {isLoading ? <Loading /> : !user ? <AccessNotice text="Please sign in before adding a product." /> : user.accountType !== 'farmer' ? <AccessNotice text="Only farmer accounts can publish products." /> : (
               <form onSubmit={submit} className="space-y-5">

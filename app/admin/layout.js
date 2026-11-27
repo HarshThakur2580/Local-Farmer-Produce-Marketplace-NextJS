@@ -18,6 +18,7 @@ function AdminLayoutInner({ children }) {
   const { isAuthenticated, isLoaded } = useAdmin();
   const { refreshAdminSession } = useAdminAuth();
   const [loginForm, setLoginForm] = useState({ email: '', password: '' });
+  const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
@@ -57,7 +58,28 @@ function AdminLayoutInner({ children }) {
             {loginError && <div role="alert" className="mb-5 p-4 bg-red-50 border border-red-200 text-red-700 text-sm font-semibold rounded-2xl">{loginError}</div>}
             <form onSubmit={handleAdminLogin} className="space-y-5">
               <label className="block text-sm font-black text-[#40564a] space-y-2"><span>Administrator email</span><input type="email" required autoComplete="username" value={loginForm.email} onChange={(event) => setLoginForm((current) => ({ ...current, email: event.target.value }))} className="input" /></label>
-              <label className="block text-sm font-black text-[#40564a] space-y-2"><span>Administrator password</span><input type="password" required autoComplete="current-password" value={loginForm.password} onChange={(event) => setLoginForm((current) => ({ ...current, password: event.target.value }))} className="input" /></label>
+              <label className="block text-sm font-black text-[#40564a] space-y-2">
+                <span>Administrator password</span>
+                <div className="relative">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    required
+                    autoComplete="current-password"
+                    value={loginForm.password}
+                    onChange={(event) => setLoginForm((current) => ({ ...current, password: event.target.value }))}
+                    className="input pr-12"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((current) => !current)}
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#607068] hover:text-[#155d38] transition-colors p-1"
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    title={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    <Icon name={showPassword ? 'eyeOff' : 'eye'} className="w-5 h-5" />
+                  </button>
+                </div>
+              </label>
               <button type="submit" disabled={submitting} className="btn-primary w-full disabled:opacity-60">{submitting ? 'Authenticating...' : 'Enter admin console'}</button>
             </form>
             <Link href="/" className="mt-6 text-center text-sm font-black text-[#155d38] hover:underline">Return to marketplace</Link>

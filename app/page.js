@@ -85,7 +85,7 @@ function CustomerHome({ user, marketplace, cartCount, total, error }) {
             <span className="eyebrow text-[#79e87e]">Customer home</span>
             <h1 className="section-title mt-6">Welcome back, <span className="text-[#79e87e]">{firstName(user.fullName)}</span>.</h1>
             <p className="mt-5 max-w-2xl text-lg text-white/65">Discover what nearby farmers have just harvested and build your next fresh-food order.</p>
-            <div className="mt-8 flex flex-wrap gap-3"><Link href="/products" className="btn-primary">Shop produce</Link><Link href="/farmers" className="btn-secondary">Meet growers</Link></div>
+            <div className="mt-8 flex flex-wrap gap-3"><Link href="/products" className="btn-primary">Shop product</Link><Link href="/farmers" className="btn-secondary">Meet growers</Link></div>
           </div>
           <Link href="/cart" className="rounded-[2.25rem] bg-[#f4511e] p-7 sm:p-9 flex flex-col justify-between min-h-72 hover:-translate-y-1">
             <div className="flex items-center justify-between"><span className="eyebrow">Your cart</span><Icon name="cart" className="w-8 h-8" /></div>
@@ -126,7 +126,7 @@ function FarmerHome({ user, overview, error }) {
           <span className="eyebrow text-[#79e87e]">Grower workspace</span>
           <div className="mt-6 grid lg:grid-cols-[1fr_auto] gap-8 items-end">
             <div><h1 className="section-title max-w-4xl">Grow your market, <span className="text-[#f4511e]">{firstName(user.fullName)}</span>.</h1><p className="mt-5 text-lg text-white/65 max-w-2xl">Manage your farm story, publish available harvests, and keep every listing current.</p></div>
-            <div className="flex flex-wrap gap-3"><Link href="/products/new" className="btn-primary">Add produce</Link><Link href={overview?.farmer?.id ? `/farmers/${overview.farmer.id}` : '/farmers/new'} className="btn-secondary">{overview?.farmer ? 'View farm profile' : 'Create farm profile'}</Link></div>
+            <div className="flex flex-wrap gap-3"><Link href="/products/new" className="btn-primary">Add product</Link><Link href={overview?.farmer?.id ? `/farmers/${overview.farmer.id}` : '/farmers/new'} className="btn-secondary">{overview?.farmer ? 'View farm profile' : 'Create farm profile'}</Link></div>
           </div>
         </div>
       </section>

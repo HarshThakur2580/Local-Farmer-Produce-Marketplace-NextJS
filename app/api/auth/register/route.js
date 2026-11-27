@@ -19,7 +19,6 @@ export async function POST(request) {
       accountType,
       farmName,
       location,
-      agreeTerms,
     } = body;
 
     if (
@@ -72,13 +71,6 @@ export async function POST(request) {
 
     if (!['customer', 'farmer'].includes(accountType)) {
       return NextResponse.json({ message: 'Select a valid account type.' }, { status: 400 });
-    }
-
-    if (agreeTerms !== true) {
-      return NextResponse.json(
-        { message: 'You must agree to the Terms of Service and Privacy Policy.' },
-        { status: 400 }
-      );
     }
 
     if (accountType === 'farmer' && !normalizedFarmName) {
